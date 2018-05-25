@@ -7,7 +7,7 @@
 # Set name of the theme to load. Optionally, if you set this to "random"
 # it'll load a random theme each time that oh-my-zsh is loaded.
 # See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
-ZSH_THEME="robbyrussell"
+ZSH_THEME="oxide"
 
 # Set list of themes to load
 # Setting this variable when ZSH_THEME=random
@@ -105,5 +105,15 @@ source $ZSH/oh-my-zsh.sh
 alias zshconfig="nano ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
+# adding z for autocompletion
 . /home/mmoehrlein/.oh-my-zsh/plugins/z/z.sh
+
+# binding strg+space to accept autosuggestion
 bindkey '^ ' autosuggest-accept
+
+# loading base16_shell
+BASE16_SHELL=$HOME/.config/base16-shell/
+[ -n "$PS1" ] && [ -s $BASE16_SHELL/profile_helper.sh ] && eval "$($BASE16_SHELL/profile_helper.sh)"
+
+# jumping to ~
+cd
