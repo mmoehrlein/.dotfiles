@@ -1,7 +1,4 @@
-apt install git
-
-# cloning all the dotfiles
-git clone git@github.com:mmoehrlein/.dotfiles.git ~/.dotfiles
+#!/bin/bash
 
 # cloning base16_shell
 git clone https://github.com/chriskempson/base16-shell.git ~/.config/base16-shell
