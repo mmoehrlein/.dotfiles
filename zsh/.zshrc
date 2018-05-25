@@ -63,12 +63,15 @@ plugins=(
   command-not-found
   common-aliases
   dirhistory
+  ssh-agent
   npm
   sudo
   web-search
   wd
   zsh-autosuggestions
 )
+
+zstyle :omz:plugins:ssh-agent agent-forwarding on
 
 ZSH_DISABLE_COMPFIX=true
 source $ZSH/oh-my-zsh.sh
