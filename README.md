@@ -4,7 +4,7 @@ dotfiles for use with stow
 ## setup new machine
 ```bash
 sudo apt install git stow
-git clone https://github.com/mmoehrlein/.dotfiles.git ~/.dotfiles
+git clone git@github.com:mmoehrlein/.dotfiles.git ~/.dotfiles
 stow -d ~/.dotfiles -t $HOME -S *
 sudo apt install <everything else>
 ```
