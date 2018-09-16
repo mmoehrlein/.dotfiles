@@ -1,3 +1,6 @@
+# added because of error in win10 subsystem
+setopt nobgnice
+
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
