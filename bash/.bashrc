@@ -116,6 +116,14 @@ if ! shopt -oq posix; then
   fi
 fi
 
+# dircolors.
+if [ -x "$(command -v dircolors)" ]; then
+    eval "$(dircolors -b ~/.dircolors)"
+fi
+
+# Base16 Shell.
+[ -n "$PS1" ] && [ -s "$BASE16_SHELL/profile_helper.sh" ] && eval "$("$BASE16_SHELL/profile_helper.sh")"
+
 
 # Launch Zsh
 if [ -t 1 ]; then

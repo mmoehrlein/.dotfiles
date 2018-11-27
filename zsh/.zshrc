@@ -120,3 +120,6 @@ BASE16_SHELL=$HOME/.config/base16-shell/
 
 # jumping to ~
 cd
+
+# opam configuration
+test -r /home/mmoehrlein/.opam/opam-init/init.zsh && . /home/mmoehrlein/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true
