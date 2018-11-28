@@ -1,3 +1,54 @@
+[alias]
+    a = add
+    aa = add -A
+    c = commit -m
+    ca = commit -am
+    co = checkout
+    contributors = shortlog -ns
+    d = diff --patch-with-stat
+    df = diff --patch-with-stat --color-words
+    fc = "!f() { git log --pretty='%C(yellow)%h%Creset -%Cred%d%Creset %s %Cgreen(%ar) %C(bold blue)<%an>%Creset' --grep=$1; }; f"
+    fs = "!f() { git log --pretty='%C(yellow)%h%Creset -%Cred%d%Creset %s %Cgreen(%ar) %C(bold blue)<%an>%Creset' -S$1; }; f"
+    lg = log --graph --pretty='%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%ar) %C(bold blue)<%an>%Creset'
+    remotes = remote -v
+    s = status -s
+    sclone = clone --depth 1
+    undo = reset HEAD~1
+
 [user]
 	email = michael.moehrlein@gmail.com
 	name = mmoehrlein
+
+[core]
+    editor = vim
+
+[color]
+    ui = always
+    diff = always
+
+[color "diff"]
+    meta = yellow bold
+    commit = cyan bold
+    frag = magenta bold
+    old = red bold
+    new = green bold
+    whitespace = red reverse
+
+[color "diff-highlight"]
+    oldNormal = red bold
+    oldHighlight = red bold 52
+    newNormal = green bold
+    newHighlight = green bold 22
+
+[color "branch"]
+    current = yellow reverse
+    local = yellow
+    remote = green
+
+[color "status"]
+    added = green
+    changed = yellow
+    untracked = red
+
+[gpg]
+    program = gpg
