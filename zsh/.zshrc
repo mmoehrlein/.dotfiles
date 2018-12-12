@@ -106,10 +106,10 @@ fi
 #
 # Example aliases
 alias zshconfig="nvim ~/.zshrc"
-# alias ohmyzsh="mate ~/.oh-my-zsh"
+alias ohmyzsh="mate ~/.oh-my-zsh"
 
 # adding z for autocompletion
-. ~/.oh-my-zsh/plugins/z/z.sh
+source ~/.oh-my-zsh/plugins/z/z.sh
 
 # binding strg+space to accept autosuggestion
 bindkey '^ ' autosuggest-accept
