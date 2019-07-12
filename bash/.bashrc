@@ -107,6 +107,6 @@ BASE16_SHELL="$HOME/.config/base16-shell/"
         eval "$("$BASE16_SHELL/profile_helper.sh")"
 
 # Launch Zsh
-if [ -t 1 ]; then
-exec zsh
+if [ -t 1 -a hash zsh 2>/dev/null ]; then
+  exec zsh
 fi
