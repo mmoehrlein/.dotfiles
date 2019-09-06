@@ -8,6 +8,11 @@ case $- in
       *) return;;
 esac
 
+# Launch Zsh
+if [ -t 1 -a hash zsh 2>/dev/null ]; then
+  exec zsh
+fi
+
 # don't put duplicate lines or lines starting with space in the history.
 # See bash(1) for more options
 HISTCONTROL=ignoreboth
@@ -106,7 +111,4 @@ BASE16_SHELL="$HOME/.config/base16-shell/"
     [ -s "$BASE16_SHELL/profile_helper.sh" ] && \
         eval "$("$BASE16_SHELL/profile_helper.sh")"
 
-# Launch Zsh
-if [ -t 1 -a hash zsh 2>/dev/null ]; then
-  exec zsh
-fi
+
