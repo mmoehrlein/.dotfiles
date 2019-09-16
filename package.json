@@ -1,0 +1,31 @@
+{
+  "name": "setup",
+  "version": "1.0.0",
+  "author": "Michael Moehrlein <code@moehrlein.io> (moehrlein.io)",
+  "description": "",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mmoehrlein/.dotfiles.git"
+  },
+  "main": "setup/setup.js",
+  "bin": {
+    "setup": "setup/setup.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "pkg -t linux-x64 -o setup/bin/setup .",
+    "start": "node setup/setup.js"
+  },
+  "license": "ISC",
+  "dependencies": {
+    "apt": "0.0.2",
+    "chalk": "^2.4.2",
+    "commander": "^3.0.0",
+    "fs-extra": "^8.1.0",
+    "highland": "^2.13.5",
+    "inquirer": "^6.5.0",
+    "shelljs": "^0.8.3",
+    "system-installer": "^1.1.0"
+  },
+  "devDependencies": {}
+}

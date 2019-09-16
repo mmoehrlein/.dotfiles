@@ -9,6 +9,8 @@ const apt = require('apt');
 const fs = require('fs-extra');
 const high = require('highland');
 const chalk = require('chalk');
+const path = require('path');
+const {installer, packager} = require('system-installer');
 
 /**
  * Define chalk styles
@@ -25,6 +27,9 @@ const {
 	magenta: style_attention,
 	green: style_running,
 	red: style_warn,
+	red: {
+		underline: style_error
+	},
 	yellow: style_dry,
 	cyan: style_welcome
 } = chalk;
@@ -41,11 +46,19 @@ const {
 const DRY = process.argv.includes('dry') || process.argv.includes('d');
 
 /**
+ * Process.pkg is set if it is run as a standalone executable packaged by pkg
+ * In this case the repository has to be cloned to access all dotfiles
+ *
+ * @type {boolean}
+ */
+const PKG = process.pkg !== undefined;
+
+/**
  * Defines if choices are checked by default
  *
  * @const {string | boolean}
  */
-const DEFAULT_ON = process.env.SETUP_DEFAULT_ON || false;
+const DEFAULT_ON = process.env.SETUP_DEFAULT_ON || true;
 
 /**
  * Get HOME from environment
@@ -66,7 +79,7 @@ let chmod0755 = [];
  *
  * @const {high} - gives easy access to convenient methods for transforming the stream
  */
-const npmGlobalsStream = high(fs.createReadStream(`${__dirname}/assets/npmGlobals`, 'utf8')).split();
+const npmGlobalsStream = high(fs.createReadStream(path.join(__dirname, 'assets/npmGlobals'), 'utf8')).split();
 
 /**
  * Running the main function
@@ -88,6 +101,7 @@ async function setup() {
 		'╰──────────────────────────────────────────╯');
 	console.log(message);
 	DRY ? console.log(style_attention('DRY RUN ---- no commands are run, just printed to the terminal')) : '';
+	PKG ? console.log(style_attention('PKG RUN ---- run as standalone executable')) : '';
 
 	/**
 	 * A question
@@ -219,7 +233,15 @@ async function setup() {
 			name: 'pythonMods',
 			message: `Select which ${style_attention('python modules')} to set up`,
 			choices: [
-				new inquirer.Separator('== python modules ==')
+				new inquirer.Separator('== python modules =='),
+				{
+					name: 'saws',
+					checked: DEFAULT_ON
+				},
+				{
+					name: 'HTTPie',
+					checked: DEFAULT_ON
+				}
 			],
 			when: ans => ans && ans.prog !== undefined && ans.prog.includes('python')
 		},
@@ -228,11 +250,7 @@ async function setup() {
 			name: 'python3Mods',
 			message: `Select which ${style_attention('python3 modules')} to set up`,
 			choices: [
-				new inquirer.Separator('== python3 modules =='),
-				{
-					name: 'saws',
-					checked: DEFAULT_ON
-				}
+				new inquirer.Separator('== python3 modules ==')
 			],
 			when: ans => ans && ans.prog !== undefined && ans.prog.includes('python3')
 		},
@@ -253,8 +271,35 @@ async function setup() {
 				{
 					name: 'pipes.sh',
 					checked: DEFAULT_ON
-				}
-
+				},
+				/*{
+					name: 'icdiff',
+					checked: DEFAULT_ON
+				},
+				{
+					name: 'taskwarrior',
+					checked: DEFAULT_ON
+				},
+				{
+					name: 'cherrytree',
+					checked: DEFAULT_ON
+				},
+				{
+					name: 'jq',
+					checked: DEFAULT_ON
+				},
+				{
+					name: 'gotty',
+					checked: DEFAULT_ON
+				},
+				{
+					name: 'aria2',
+					checked: DEFAULT_ON
+				},
+				{
+					name: 'ranger',
+					checked: DEFAULT_ON
+				},*/
 			]
 		}
 	];
@@ -271,10 +316,7 @@ async function setup() {
 	 */
 	HOME = answers['home:new'] || HOME;
 
-	/*let index;
-	if ((index = answers.shells.indexOf('zsh')) >= 0 && answers.rice.indexOf('oh-my-zsh') >= 0) {
-		answers.installs.splice(index, 1);
-	}*/
+	const DOTFILE_DIR = PKG ? path.join(HOME, '/.dotfiles/') : path.join(__dirname, '/../');
 
 	/**
 	 * Updating and upgrading
@@ -289,19 +331,37 @@ async function setup() {
 	await aptInstall('stow git');
 
 	/**
+	 * Clone .dotfiles repo to $HOME/.dotfiles if executed as package
+	 */
+	if (PKG) {
+		try {
+			console.log(style_running(`cloning repo to ${DOTFILE_DIR} ...`));
+			exec(`git clone https://github.com/mmoehrlein/.dotfiles ${DOTFILE_DIR}`);
+		} catch (error) {
+			console.log(style_error('!!! Something went wrong cloning the dotfile repo !!!'));
+			console.log(style_warn('Without the repo dotfiles cannot be stowed. No further execution possible.'));
+			sh.exit(1);
+		}
+	}
+
+	/**
 	 * SHELLS SECTION
 	 */
 	/**
 	 * Setting up bash
 	 */
-	if (answers.shells.includes('bash')) {
-		console.log(style_running('removing default .bash_logout, .bashrc, .profile ...'));
+	if (answers.shells && answers.shells.includes('bash')) {
+		try {
+			console.log(style_running('removing default .bash_logout, .bashrc, .profile ...'));
 
-		[`${HOME}/.bash_logout`, `${HOME}/.bashrc`, `${HOME}/.profile`].forEach(
-			async value => DRY ? console.log(style_dry('$ rm ' + value)) : fs.remove(value)
-		);
-		console.log(style_running('stow bash dotfiles ...'));
-		exec(`stow -d ${HOME}/.dotfiles -t ${HOME} -S bash`);
+			[path.join(HOME, '.bash_logout'), path.join(HOME, '.bashrc'), path.join(HOME, '.profile')].forEach(
+				async value => DRY ? console.log(style_dry('$ rm ' + value)) : fs.remove(value)
+			);
+			console.log(style_running('stow bash dotfiles ...'));
+			exec(`stow -d ${DOTFILE_DIR} -t ${HOME} -S bash`);
+		} catch (error) {
+			console.log(errorMsg('bash'));
+		}
 	} else {
 		console.log(style_warn('WARNING: without bash setup zsh might not work correctly either'))
 	}
@@ -309,11 +369,15 @@ async function setup() {
 	/**
 	 * Setting up zsh
 	 */
-	if (answers.shells.includes('zsh') || answers.rice.includes('oh-my-zsh')) {
-		console.log(style_running('stow zsh dotfiles ...'));
-		exec(`stow -d ${HOME}/.dotfiles -t ${HOME} -S zsh`);
-		console.log(style_running('install zsh ...'));
-		await aptInstall('zsh');
+	if (answers.shells && answers.shells.includes('zsh') || answers.rice.includes('oh-my-zsh')) {
+		try {
+			console.log(style_running('stow zsh dotfiles ...'));
+			exec(`stow -d ${DOTFILE_DIR} -t ${HOME} -S zsh`);
+			console.log(style_running('install zsh ...'));
+			await aptInstall('zsh');
+		} catch (error) {
+			console.log(errorMsg('zsh'));
+		}
 	}
 
 	/**
@@ -322,65 +386,82 @@ async function setup() {
 	/**
 	 * Setting up oh-my-zsh
 	 */
-	if (answers.rice.includes('oh-my-zsh')) {
-		console.log(style_running('stow oh-my-zsh ...'));
-		exec(`stow -d ${HOME}/.dotfiles -t ${HOME} -S oh-my-zsh`);
-		console.log(style_running('install oh-my-zsh ...'));
-		exec('sh -c "$(wget https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O -)"');
-		console.log(style_running('install autosuggestions for zsh ...'));
-		exec('git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions');
+	if (answers.rice && answers.rice.includes('oh-my-zsh')) {
+		try {
+			console.log(style_running('stow oh-my-zsh ...'));
+			exec(`stow -d ${DOTFILE_DIR} -t ${HOME} -S oh-my-zsh`);
+			console.log(style_running('install oh-my-zsh ...'));
+			exec('sh -c "$(wget https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O -)"');
+			console.log(style_running('install autosuggestions for zsh ...'));
+			exec(`git clone https://github.com/zsh-users/zsh-autosuggestions \${ZSH_CUSTOM:-${HOME}/.oh-my-zsh/custom}/plugins/zsh-autosuggestions`);
+		} catch (error) {
+			console.log(errorMsg('oh-my-zsh'));
+		}
 	}
 
 	/**
 	 * Setting up dircolors
 	 */
-	if (answers.rice.includes('dircolors')) {
-		console.log(style_running('stow .dircolors ...'));
-		exec(`stow -d ${HOME}/.dotfiles -t ${HOME} -S dircolors`);
+	if (answers.rice && answers.rice.includes('dircolors')) {
+		try {
+			console.log(style_running('stow .dircolors ...'));
+			exec(`stow -d ${DOTFILE_DIR} -t ${HOME} -S dircolors`);
+		} catch (error) {
+			console.log(errorMsg('dircolors'));
+		}
 	}
 
 	/**
 	 * Setting up base16_shell
 	 */
 
-	if (answers.rice.includes('base16_shell')) {
-		console.log(style_running('cloning base16_shell ...'));
-		exec('git clone https://github.com/chriskempson/base16-shell.git ~/.config/base16-shell');
-		console.log(style_running('stow base16_shell dotfiles ...'));
-		exec(`stow -d ${HOME}/.dotfiles -t ${HOME}/ -S base16-shell`);
+	if (answers.rice && answers.rice.includes('base16_shell')) {
+		try {
+			console.log(style_running('cloning base16_shell ...'));
+			exec(`git clone https://github.com/chriskempson/base16-shell.git ${path.join(HOME, '/.config/base16-shell')}`);
+			console.log(style_running('stow base16_shell dotfiles ...'));
+			exec(`stow -d ${DOTFILE_DIR} -t ${HOME} -S base16-shell`);
+		} catch (error) {
+			console.log(errorMsg('base16_shell'));
+		}
 	}
 
 	/**
 	 * EDITORS SECTION
 	 */
-	let neo;
 	/**
 	 * Setting up vim
 	 */
-	if(answers.editors.includes('vim') || (neo = answers.editors.includes('neovim'))){
-		console.log(style_running('cloning vundle ...'));
-		exec(`git clone https://github.com/VundleVim/Vundle.vim.git ${HOME}/.vim/bundle/Vundle.vim`);
-		console.log(style_running('stowing vim dotfiles ...'));
-		exec(`stow -d ${HOME}/.dotfiles -t ${HOME} -S vim`);
-		console.log(style_running('installing vim ...'));
-		aptInstall('vim');
-		console.log(style_running('installing vim plugins with vundle ...'));
-		exec('vim +PluginInstall +qall');
+	if (answers.editors && answers.editors.includes('vim')) {
+		try {
+			console.log(style_running('stowing vim dotfiles ...'));
+			exec(`stow -d ${DOTFILE_DIR} -t ${HOME} -S vim`);
+			console.log(style_running('installing vim ...'));
+			await aptInstall('vim');
+			console.log(style_running('installing vim plugins with vundle ...'));
+			exec(`/usr/bin/vim +PluginInstall +qall`);
+		} catch (error) {
+			console.log(errorMsg('vim'));
+		}
 	}
 
 	/**
 	 * Setting up neovim
 	 */
-	if(neo){
-		console.log(style_running('stow nvim dotfiles ...'));
-		exec(`stow -d ${HOME}/.dotfiles -t ${HOME} -S nvim`);
-		console.log(style_running('installing software-properties-common ...'));
-		aptInstall('software-properties-common');
-		console.log(style_running('adding ppa repo ...'));
-		exec('sudo apt-add-repository ppa:neovim-ppa/stable');
-		aptUpdate();
-		console.log(style_running('installing neovim ...'));
-		aptInstall('neovim');
+	if (answers.editors && answers.editors.includes('neovim')) {
+		try {
+			console.log(style_running('stow nvim dotfiles ...'));
+			exec(`stow -d ${DOTFILE_DIR} -t ${HOME} -S nvim`);
+			console.log(style_running('installing software-properties-common ...'));
+			await aptInstall('software-properties-common');
+			console.log(style_running('adding ppa repo ...'));
+			exec('sudo apt-add-repository ppa:neovim-ppa/stable');
+			await aptUpdate();
+			console.log(style_running('installing neovim ...'));
+			await aptInstall('neovim');
+		} catch (error) {
+			console.log(errorMsg('neovim'));
+		}
 	}
 
 	/**
@@ -390,8 +471,16 @@ async function setup() {
 	 * Setting up node with nvm
 	 */
 	if (answers.prog && answers.prog.includes('node')) {
-		console.log(style_running('installing nvm and node ...'));
-		exec(`curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.6/install.sh | bash && nvm install node`)
+		try {
+			console.log(style_running('installing nvm and node ...'));
+			exec(`curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.6/install.sh | bash`);
+			exec('export NVM_DIR="$HOME/.nvm"');
+			exec('[ -s "$NVM_DIR/nvm.sh" ] && \\. "$NVM_DIR/nvm.sh"');
+			exec('[ -s "$NVM_DIR/bash_completion" ] && \\. "$NVM_DIR/bash_completion"');
+			exec('nvm install node');
+		} catch (error) {
+			console.log(errorMsg('node'));
+		}
 	}
 
 	/**
@@ -408,12 +497,16 @@ async function setup() {
 	 * NPM GLOBALS SECTION
 	 */
 	/**
-	 * Installing global npm packages and writing them to ~/.npmGlobals
+	 * Installing global npm packages and writing them to ${HOME}/.npmGlobals
 	 */
 	if (answers.npmGlobals) {
-		console.log(style_running('installing selected npm packages globally ...'));
-		exec(`sudo npm i -g ${answers.npmGlobals.join(' ')}`);
-		DRY ? 'adding packages to ~/.npmGlobals' : fs.writeFile(`${HOME}/.npmGlobals`, answers.npmGlobals.join('\n'))
+		try {
+			console.log(style_running('installing selected npm packages globally ...'));
+			exec(`sudo npm i -g ${answers.npmGlobals.join(' ')}`);
+			DRY ? `adding packages to ${path.join(HOME, '.npmGlobals')}` : fs.writeFile(path.join(HOME, '.npmGlobals'), answers.npmGlobals.join('\n'))
+		} catch (error) {
+			console.log(errorMsg('npmGlobals'));
+		}
 	}
 
 	/**
@@ -435,26 +528,38 @@ async function setup() {
 	 * Setting up fonts-font-awesome
 	 */
 	if (answers.other && answers.other.includes('fonts-font-awesome')) {
-		console.log(style_running('installing fonts-font-awesome ...'));
-		aptInstall('fonts-font-awesome');
+		try {
+			console.log(style_running('installing fonts-font-awesome ...'));
+			await aptInstall('fonts-font-awesome');
+		} catch (error) {
+			console.log(errorMsg('fonts-font-awesome'));
+		}
 	}
 
 	/**
 	 * Setting up UltimatePipes
 	 */
 	if (answers.other && answers.other.includes('ultimatePipe')) {
-		console.log(style_running('downloading ultimatePipe to ~/bin ...'));
-		exec(`curl -Lo ${HOME}/bin/up https://github.com/akavel/up/releases/download/v0.3.2/up`);
-		chmod0755.push(`${HOME}/bin/up`);
+		try {
+			console.log(style_running(`downloading ultimatePipe to ${path.join(HOME, 'bin')} ...`));
+			exec(`curl -Lo ${path.join(HOME, 'bin/up')} https://github.com/akavel/up/releases/download/v0.3.2/up`);
+			chmod0755.push(path.join(HOME, 'bin/up'));
+		} catch (error) {
+			console.log(errorMsg('ultimatePipe'));
+		}
 	}
 
 	/**
 	 * Setting up pipes.sh
 	 */
 	if (answers.other && answers.other.includes('pipes.sh')) {
-		console.log(style_running('downloading pipes.sh to ~/bin as pipe ...'));
-		exec(`curl -Lo ${HOME}/bin/pipes https://raw.githubusercontent.com/pipeseroni/pipes.sh/master/pipes.sh`);
-		chmod0755.push(`${HOME}/bin/pipes`);
+		try {
+			console.log(style_running(`downloading pipes.sh to ${path.join(HOME, 'bin')} as pipe ...`));
+			exec(`curl -Lo ${path.join(HOME, 'bin/pipes')} https://raw.githubusercontent.com/pipeseroni/pipes.sh/master/pipes.sh`);
+			chmod0755.push(`${path.join(HOME, 'bin/pipes')}`);
+		} catch (error) {
+			console.log(errorMsg('pipes.sh'));
+		}
 	}
 
 	/**
@@ -474,7 +579,15 @@ async function setup() {
  *      exec('ls');
  */
 function exec(cmd) {
-	DRY ? console.log(style_dry('$ ' + cmd)) : sh.exec(cmd);
+	if (DRY) {
+		return console.log(style_dry('$ ' + cmd));
+	} else {
+		const res = sh.exec(cmd);
+		if (res.code !== 0 || sh.error()) {
+			throw new Error(res.stderr);
+		}
+		return res;
+	}
 }
 
 /**
@@ -493,5 +606,16 @@ async function aptUpdate() {
  * @returns {Promise<*>}
  */
 async function aptInstall(pkg) {
-	return DRY ? console.log(style_dry(`$ sudo apt install ${pkg} -y`)) : new Promise(resolve => apt.install(pkg, resolve));
+	return DRY ? console.log(style_dry(`$ ${packager().installercommand} ${pkg}`))
+		: installer(pkg);
+}
+
+/**
+ * Creates standard error message for a step
+ *
+ * @param pkg
+ * @returns {string}
+ */
+function errorMsg(pkg){
+	return style_error(`!!! Something went wrong installing ${pkg} !!!`);
 }
