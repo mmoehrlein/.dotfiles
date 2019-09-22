@@ -1,6 +1,3 @@
-# neovim just uses vimrc
-#source ~/.vimrc
-
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Maintainer:
 "       Amir Salihefendic — @amix3k
@@ -20,7 +17,7 @@
 "    -> Text, tab and indent related
 "    -> Visual mode related
 "    -> Moving around, tabs and buffers
-"    -> Status line
+"    ->  line
 "    -> Editing mappings
 "    -> vimgrep searching and cope displaying
 "    -> Spell checking
