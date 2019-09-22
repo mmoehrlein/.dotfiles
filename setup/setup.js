@@ -7,9 +7,9 @@ const inquirer = require('inquirer');
 const sh = require('shelljs');
 const apt = require('apt');
 const fs = require('fs-extra');
-const high = require('highland');
 const chalk = require('chalk');
 const path = require('path');
+const high = require('highland');
 const {installer, packager} = require('system-installer');
 
 /**
@@ -271,7 +271,7 @@ async function setup() {
 				{
 					name: 'pipes.sh',
 					checked: DEFAULT_ON
-				},
+				}
 				/*{
 					name: 'icdiff',
 					checked: DEFAULT_ON
@@ -329,6 +329,7 @@ async function setup() {
 	 */
 	console.log(style_running('installing stow and git ...'));
 	await aptInstall('stow git');
+	stow('git');
 
 	/**
 	 * Clone .dotfiles repo to $HOME/.dotfiles if executed as package
@@ -347,6 +348,10 @@ async function setup() {
 	/**
 	 * SHELLS SECTION
 	 */
+	if((answers.shells && (answers.shells.includes('zsh') || answers.shells.includes('bash')))
+		|| (answers.rice && answers.rice.includes('oh-my-zsh'))){
+		stow('shell');
+	}
 	/**
 	 * Setting up bash
 	 */
@@ -357,8 +362,7 @@ async function setup() {
 			[path.join(HOME, '.bash_logout'), path.join(HOME, '.bashrc'), path.join(HOME, '.profile')].forEach(
 				async value => DRY ? console.log(style_dry('$ rm ' + value)) : fs.remove(value)
 			);
-			console.log(style_running('stow bash dotfiles ...'));
-			exec(`stow -d ${DOTFILE_DIR} -t ${HOME} -S bash`);
+			stow('bash');
 		} catch (error) {
 			console.log(errorMsg('bash'));
 		}
@@ -371,8 +375,7 @@ async function setup() {
 	 */
 	if (answers.shells && answers.shells.includes('zsh') || answers.rice.includes('oh-my-zsh')) {
 		try {
-			console.log(style_running('stow zsh dotfiles ...'));
-			exec(`stow -d ${DOTFILE_DIR} -t ${HOME} -S zsh`);
+			stow('zsh');
 			console.log(style_running('install zsh ...'));
 			await aptInstall('zsh');
 		} catch (error) {
@@ -388,15 +391,18 @@ async function setup() {
 	 */
 	if (answers.rice && answers.rice.includes('oh-my-zsh')) {
 		try {
-			console.log(style_running('stow oh-my-zsh ...'));
-			exec(`stow -d ${DOTFILE_DIR} -t ${HOME} -S oh-my-zsh`);
+			stow('oh-my-zsh');
 			console.log(style_running('install oh-my-zsh ...'));
 			exec('sh -c "$(wget https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O -)"');
 			console.log(style_running('install autosuggestions for zsh ...'));
 			exec(`git clone https://github.com/zsh-users/zsh-autosuggestions \${ZSH_CUSTOM:-${HOME}/.oh-my-zsh/custom}/plugins/zsh-autosuggestions`);
+			console.log(style_running('install syntax highlight for zsh ...'));
+			exec(`git clone https://github.com/zsh-users/syntax-highlighting.git \${ZSH_CUSTOM:-${HOME}/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting`);
 		} catch (error) {
 			console.log(errorMsg('oh-my-zsh'));
 		}
+	} else {
+		console.log(style_warn('WARNING: the zshrc is meant to be used with oh-my-sh'));
 	}
 
 	/**
@@ -404,8 +410,7 @@ async function setup() {
 	 */
 	if (answers.rice && answers.rice.includes('dircolors')) {
 		try {
-			console.log(style_running('stow .dircolors ...'));
-			exec(`stow -d ${DOTFILE_DIR} -t ${HOME} -S dircolors`);
+			stow('dircolors');
 		} catch (error) {
 			console.log(errorMsg('dircolors'));
 		}
@@ -419,8 +424,7 @@ async function setup() {
 		try {
 			console.log(style_running('cloning base16_shell ...'));
 			exec(`git clone https://github.com/chriskempson/base16-shell.git ${path.join(HOME, '/.config/base16-shell')}`);
-			console.log(style_running('stow base16_shell dotfiles ...'));
-			exec(`stow -d ${DOTFILE_DIR} -t ${HOME} -S base16-shell`);
+			stow('base16_shell');
 		} catch (error) {
 			console.log(errorMsg('base16_shell'));
 		}
@@ -434,11 +438,10 @@ async function setup() {
 	 */
 	if (answers.editors && answers.editors.includes('vim')) {
 		try {
-			console.log(style_running('stowing vim dotfiles ...'));
-			exec(`stow -d ${DOTFILE_DIR} -t ${HOME} -S vim`);
+			stow('vim');
 			console.log(style_running('installing vim ...'));
 			await aptInstall('vim');
-			console.log(style_running('installing vim plugins with vundle ...'));
+			console.log(style_running('installing vim plugins with vim plug ...'));
 			exec(`/usr/bin/vim +PluginInstall +qall`);
 		} catch (error) {
 			console.log(errorMsg('vim'));
@@ -450,8 +453,7 @@ async function setup() {
 	 */
 	if (answers.editors && answers.editors.includes('neovim')) {
 		try {
-			console.log(style_running('stow nvim dotfiles ...'));
-			exec(`stow -d ${DOTFILE_DIR} -t ${HOME} -S nvim`);
+			stow('nvim');
 			console.log(style_running('installing software-properties-common ...'));
 			await aptInstall('software-properties-common');
 			console.log(style_running('adding ppa repo ...'));
@@ -591,6 +593,16 @@ function exec(cmd) {
 }
 
 /**
+ * Stows the specified folder from $DOTFILE_DIR in $HOME
+ *
+ * @param folder    A folder in the dotfiles dir
+ */
+function stow(folder) {
+	console.log(style_running(`stow ${folder} dotfiles ...`));
+	exec(`stow -d ${DOTFILE_DIR} -t ${HOME} -S ${folder}`);
+}
+
+/**
  * Asynchronous wrapper for apt.update() that only prints to console if it is a dry run
  *
  * @returns {Promise<*>}
@@ -616,6 +628,6 @@ async function aptInstall(pkg) {
  * @param pkg
  * @returns {string}
  */
-function errorMsg(pkg){
+function errorMsg(pkg) {
 	return style_error(`!!! Something went wrong installing ${pkg} !!!`);
 }

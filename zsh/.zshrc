@@ -72,6 +72,8 @@ plugins=(
   web-search
   wd
   zsh-autosuggestions
+  # has to be loaded last
+  zsh-syntax-highlighting
 )
 
 zstyle :omz:plugins:ssh-agent agent-forwarding on
@@ -108,8 +110,12 @@ fi
 alias zshconfig="vim ~/.zshrc"
 alias ohmyzsh="mate ~/.oh-my-zsh"
 
+if [ -f ~/.aliases ]; then
+    . ~/.aliases
+fi
+
 if [ -f ~/.bash_aliases ]; then
-    . ~/.bash_aliases
+    . ~/.common
 fi
 
 # adding z for autocompletion
@@ -118,19 +124,5 @@ source ~/.oh-my-zsh/plugins/z/z.sh
 # binding strg+space to accept autosuggestion
 bindkey '^ ' autosuggest-accept
 
-# Base16 Shell.
-BASE16_SHELL="$HOME/.config/base16-shell/"
-[ -n "$PS1" ] && \
-    [ -s "$BASE16_SHELL/profile_helper.sh" ] && \
-        eval "$("$BASE16_SHELL/profile_helper.sh")"
-
-# enable color support of ls and also add handy aliases
-if [ -x /usr/bin/dircolors ]; then
-    test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
-fi
-
 # jumping to ~
 cd
-
-# opam configuration
-test -r /home/mmoehrlein/.opam/opam-init/init.zsh && . /home/mmoehrlein/.opam/opam-init/init.zsh > /dev/null 2> /dev/null || true

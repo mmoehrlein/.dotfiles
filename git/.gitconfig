@@ -16,7 +16,7 @@
     undo = reset HEAD~1
 
 [user]
-	email = michael.moehrlein@gmail.com
+	email = code@moehrlein.io
 	name = mmoehrlein
 
 [core]
