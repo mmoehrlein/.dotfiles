@@ -397,7 +397,7 @@ async function setup() {
 			console.log(style_running('install autosuggestions for zsh ...'));
 			exec(`git clone https://github.com/zsh-users/zsh-autosuggestions \${ZSH_CUSTOM:-${HOME}/.oh-my-zsh/custom}/plugins/zsh-autosuggestions`);
 			console.log(style_running('install syntax highlight for zsh ...'));
-			exec(`git clone https://github.com/zsh-users/syntax-highlighting.git \${ZSH_CUSTOM:-${HOME}/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting`);
+			exec(`git clone https://github.com/zsh-users/zsh-syntax-highlighting.git \${ZSH_CUSTOM:-${HOME}/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting`);
 		} catch (error) {
 			console.log(errorMsg('oh-my-zsh'));
 		}
