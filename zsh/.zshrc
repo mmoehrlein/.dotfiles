@@ -64,7 +64,6 @@ COMPLETION_WAITING_DOTS="true"
 plugins=(
   git
   command-not-found
-  common-aliases
   dirhistory
   ssh-agent
   npm
@@ -108,7 +107,7 @@ fi
 #
 # Example aliases
 alias zshconfig="vim ~/.zshrc"
-alias ohmyzsh="mate ~/.oh-my-zsh"
+alias ohmyzsh="vim ~/.oh-my-zsh"
 
 if [ -f ~/.aliases ]; then
     . ~/.aliases
