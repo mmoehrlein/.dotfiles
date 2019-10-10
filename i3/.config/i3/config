@@ -12,10 +12,10 @@ font pango:Source Sans Pro 10
 set $mod Mod4
 
 # use these keys for focus, movement, and resize directions
-set $left   j
-set $down   k
-set $up     l
-set $right  semicolon
+set $left   h
+set $down   j
+set $up     k 
+set $right  l 
 
 # define names for workspaces
 set $ws1    "1:   Terminal "
@@ -46,14 +46,8 @@ hide_edge_borders none
 popup_during_fullscreen smart
 
 # start a terminal
-bindsym $mod+Return workspace $ws1; exec --no-startup-id alacritty
+bindsym $mod+Return workspace $ws1; exec --no-startup-id terminal 
 
-# start a program launcher
-#bindsym $mod+d exec --no-startup-id i3-dmenu-desktop --dmenu="dmenu -i -fn 'Source Sans Pro-10' -nb '#212121' -sb '#2b83a6' -sf '#ffffff'"
-bindsym $mod+d exec --no-startup-id rofi -show drun
-
-# switching window with win+tab
-bindsym $mod+Tab exec --no-startup-id rofi -show window
 
 # kill focused window
 bindsym $mod+Shift+q kill

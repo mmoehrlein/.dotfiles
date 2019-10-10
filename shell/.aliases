@@ -1,3 +1,6 @@
+alias paci='sudo pacman -S'
+alias pacs='pacman -Ss'
+
 alias ls='ls -hN --color=auto --group-directories-first'
 alias la='ls -alhN --color=auto --group-directories-first'
 alias ll='ls -alFh'
