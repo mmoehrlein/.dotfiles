@@ -57,17 +57,50 @@ COMPLETION_WAITING_DOTS="true"
 # Would you like to use another custom folder than $ZSH/custom?
 # ZSH_CUSTOM=/path/to/new-custom-folder
 
+MAGIC_ENTER_GIT_COMMAND='git status -u .'
+MAGIC_ENTER_OTHER_COMMAND='ls -lh .'
+
+# Set fzf installation directory path
+export FZF_BASE=/usr/bin/fzf
+# Uncomment the following line to disable fuzzy completion
+# export DISABLE_FZF_AUTO_COMPLETION="true"
+
+# Uncomment the following line to disable key bindings (CTRL-T, CTRL-R, ALT-C)
+# export DISABLE_FZF_KEY_BINDINGS="true"
+
+
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(
+  alias-finder
+  archlinux
+  aws
+  bgnotify
+  colored-man-pages
+  dotenv
+  extract
+  fd
   git
+  nvm
+  node
+  npx
+  pip
+  redis-cli
+  ripgrep
+  sudo
+  gpg-agent
   command-not-found
+  tmux
+  ufw
+  virtualenv
+  virtualenvwrapper
+  fzf
+  magic-enter
   dirhistory
   ssh-agent
   npm
-  sudo
   web-search
   wd
   zsh-autosuggestions
@@ -106,7 +139,7 @@ fi
 # For a full list of active aliases, run `alias`.
 #
 # Example aliases
-alias zshconfig="vim ~/.zshrc"
+alias zshconfig="nvim ~/.zshrc"
 alias ohmyzsh="vim ~/.oh-my-zsh"
 
 if [ -f ~/.aliases ]; then
@@ -154,6 +187,11 @@ zle-line-init() {
 zle -N zle-line-init
 echo -ne '\e[5 q' # Use beam shape cursor on startup.
 preexec() { echo -ne '\e[5 q' ;} # Use beam shape cursor for each new prompt.
+
+autoload -U bashcompinit && bashcompinit && eval "$(register-python-argcomplete pipx)"
+
+source /usr/share/fzf/key-bindings.zsh
+source /usr/share/fzf/completion.zsh
 
 # jumping to ~
 cd
