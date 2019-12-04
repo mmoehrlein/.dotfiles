@@ -83,11 +83,10 @@ plugins=(
   extract
   fd
   git
+  navi
   nvm
   node
-  npx
   pip
-  redis-cli
   ripgrep
   sudo
   gpg-agent
