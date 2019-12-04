@@ -1,3 +1,9 @@
+function zeal-docs-fix (){
+    pushd "$HOME/.local/share/Zeal/Zeal/docsets" >/dev/null || return
+    find . -iname 'react-main*.js' -exec rm '{}' \;
+    popd >/dev/null || exit
+}
+
 function paci (){
     if [ $# -eq 0 ]; then
         echo Using package from last search for install: "$PACS"
@@ -102,3 +108,8 @@ alias cat='bat'
 alias calc='speedcrunch'
 alias open='xdg-open'
 alias vim='nvim'
+alias dl='aria2c'
+alias cd..='cd ..'
+alias ...='../..'
+alias ....='../../..'
+alias diff='icdiff'
