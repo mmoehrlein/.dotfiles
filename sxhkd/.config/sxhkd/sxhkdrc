@@ -1,0 +1,56 @@
+# super + {_,shift +,ctrl +,shift + ctrl +} key 
+#     {_,_,_,_}
+
+super + d
+    rofi -modi "drun#ssh#hotstring:/home/mmoehrlein/bin/rofi/rofiHotstringsMode" -show drun
+
+super + shift + d
+    killall dunst; exec notify-send 'restart dunst'
+
+super + n
+    keepass
+
+super + u
+    rofimoji
+
+super + y
+    ~/bin/rofi/rofi-bangs.sh
+
+super + {_,shift +,ctrl +,shift + ctrl +} F3
+    {terminal -e ranger,pcmanfm,_,_}
+
+super + ctrl + b
+    terminal -e bmenu
+
+super + F2
+    brave
+
+super + F4
+    mailspring
+
+#super + F5
+
+super + t
+    pkill compton
+
+super + ctrl + t
+    compton -b
+
+Print
+    flameshot gui
+
+super + @Print
+    i3-scrot -w
+
+super + shift + @Print
+    i3-scrot -s
+
+super + shift + semicolon
+    xdg-open /usr/share/doc/manjaro/i3_help.pdf
+
+super + ctrl + @x
+    xkill
+
+XF86AudioPlay
+    playerctl -p spotify play-pause
+    
