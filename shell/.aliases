@@ -18,6 +18,11 @@ function pacs (){
     pacman -Ss $@
 }
 
+function dotify (){
+    mkdir -p "$HOME/.dotfiles/$1/.config/"
+    mv "$HOME/.config/$1" $_
+    stow -d ~/.dotfiles -t ~ -S $1
+}
 # alias pacs='pacman -Ss'
 alias pacu='sudo pacman -Syu && yay --no-confirm'
 
