@@ -1,23 +1,4 @@
-# added because of error in win10 subsystem
-setopt nobgnice
-
-# If you come from bash you might have to change your $PATH.
-# export PATH=$HOME/bin:/usr/local/bin:$PATH
-
-# Path to your oh-my-zsh installation.
-export ZSH=~/.oh-my-zsh
-
-# Set name of the theme to load. Optionally, if you set this to "random"
-# it'll load a random theme each time that oh-my-zsh is loaded.
-# See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
-ZSH_THEME="oxide"
-
-# Set list of themes to load
-# Setting this variable when ZSH_THEME=random
-# cause zsh load theme from this variable instead of
-# looking in ~/.oh-my-zsh/themes/
-# An empty array have no effect
-# ZSH_THEME_RANDOM_CANDIDATES=( "robbyrussell" "agnoster" )
+source ~/.config/zsh/themes/oxide.zsh-theme
 
 # Uncomment the following line to use case-sensitive completion.
 # CASE_SENSITIVE="true"
@@ -57,9 +38,6 @@ COMPLETION_WAITING_DOTS="true"
 # Would you like to use another custom folder than $ZSH/custom?
 # ZSH_CUSTOM=/path/to/new-custom-folder
 
-MAGIC_ENTER_GIT_COMMAND='git status -u .'
-MAGIC_ENTER_OTHER_COMMAND='ls -lh .'
-
 # Set fzf installation directory path
 export FZF_BASE=/usr/bin/fzf
 # Uncomment the following line to disable fuzzy completion
@@ -69,48 +47,9 @@ export FZF_BASE=/usr/bin/fzf
 # export DISABLE_FZF_KEY_BINDINGS="true"
 
 
-# Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
-# Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
-# Example format: plugins=(rails git textmate ruby lighthouse)
-# Add wisely, as too many plugins slow down shell startup.
-plugins=(
-  alias-finder
-  archlinux
-  aws
-  bgnotify
-  colored-man-pages
-  dotenv
-  extract
-  fd
-  git
-  navi
-  nvm
-  node
-  pip
-  ripgrep
-  sudo
-  gpg-agent
-  command-not-found
-  tmux
-  ufw
-  virtualenv
-  virtualenvwrapper
-  fzf
-  magic-enter
-  dirhistory
-  ssh-agent
-  npm
-  web-search
-  wd
-  zsh-autosuggestions
-  # has to be loaded last
-  zsh-syntax-highlighting
-)
-
-zstyle :omz:plugins:ssh-agent agent-forwarding on
 
 ZSH_DISABLE_COMPFIX=true
-source $ZSH/oh-my-zsh.sh
+#source $ZSH/oh-my-zsh.sh
 
 # User configuration
 
@@ -121,9 +60,9 @@ source $ZSH/oh-my-zsh.sh
 
 # Preferred editor for local and remote sessions
 if [[ -n $SSH_CONNECTION ]]; then
-  export EDITOR='vim'
-else
   export EDITOR='nvim'
+else
+  export EDITOR='vim'
 fi
 
 # Compilation flags
@@ -132,28 +71,33 @@ fi
 # ssh
 # export SSH_KEY_PATH="~/.ssh/rsa_id"
 
-# Set personal aliases, overriding those provided by oh-my-zsh libs,
-# plugins, and themes. Aliases can be placed here, though oh-my-zsh
-# users are encouraged to define aliases within the ZSH_CUSTOM folder.
-# For a full list of active aliases, run `alias`.
-#
-# Example aliases
-alias zshconfig="nvim ~/.zshrc"
-alias ohmyzsh="vim ~/.oh-my-zsh"
+# If not running interactively, don't do anything
+[[ $- != *i* ]] && return
 
-if [ -f ~/.aliases ]; then
-    . ~/.aliases
-fi
+# Enable colors and change prompt:
+autoload -U colors && colors
 
-if [ -f ~/.common ]; then
-    . ~/.common
-fi
+# History in cache directory:
+HISTSIZE=1000
+SAVEHIST=1000
+HISTFILE=~/.cache/zsh/history
 
-# adding z for autocompletion
-source ~/.oh-my-zsh/plugins/z/z.sh
+# Basic auto/tab complete:
+autoload -U compinit
+zstyle ':completion:*' menu select
+# Auto complete with case insenstivity
+zstyle ':completion:*' matcher-list '' 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
+
+zmodload zsh/complist
+compinit
+_comp_options+=(globdots)		# Include hidden files.
 
 # binding strg+space to accept autosuggestion
 bindkey '^ ' autosuggest-accept
+    
+###
+#   VI MODE
+###
 
 # vi mode
 bindkey -v
@@ -178,19 +122,54 @@ function zle-keymap-select {
     echo -ne '\e[5 q'
   fi
 }
+
 zle -N zle-keymap-select
+
+# ci", ci', ci`, di", etc
+autoload -U select-quoted
+zle -N select-quoted
+for m in visual viopp; do
+  for c in {a,i}{\',\",\`}; do
+    bindkey -M $m $c select-quoted
+  done
+done
+
+# ci{, ci(, ci<, di{, etc
+autoload -U select-bracketed
+zle -N select-bracketed
+for m in visual viopp; do
+  for c in {a,i}${(s..)^:-'()[]{}<>bB'}; do
+    bindkey -M $m $c select-bracketed
+  done
+done
+
 zle-line-init() {
     zle -K viins # initiate `vi insert` as keymap (can be removed if `bindkey -V` has been set elsewhere)
     echo -ne "\e[5 q"
 }
 zle -N zle-line-init
+
 echo -ne '\e[5 q' # Use beam shape cursor on startup.
 preexec() { echo -ne '\e[5 q' ;} # Use beam shape cursor for each new prompt.
 
-autoload -U bashcompinit && bashcompinit && eval "$(register-python-argcomplete pipx)"
+if [ -f ~/.aliases ]; then
+    source ~/.aliases
+fi
 
+if [ -f ~/.common ]; then
+    source ~/.common
+fi
+
+source ~/.config/broot/launcher/bash/br
+for f in ~/.config/zsh/plugins/*.zsh; do source "$f"; done
+source ~/.config/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
 source /usr/share/fzf/key-bindings.zsh
 source /usr/share/fzf/completion.zsh
+source ~/.config/zsh/plugins/zsh-you-should-use/you-should-use.plugin.zsh
+# load last !!
+source ~/.config/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh 
 
 # jumping to ~
 cd
+
+source /home/mmoehrlein/.config/broot/launcher/bash/br
