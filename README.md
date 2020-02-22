@@ -3,9 +3,9 @@ dotfiles for use with stow
 
 ## setup new machine
 ```bash
-cd setup && ./setup
+./bootstrap.sh
 ```
-## file structure example
+## file structure example for usage with stow
     dotfiles
     ├── bash
     │   ├── .bashrc
