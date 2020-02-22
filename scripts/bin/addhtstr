@@ -1,0 +1,10 @@
+#!/bin/bash
+
+name=$(rofi -dmenu -lines 0 -p hotstring)
+[ -z "$name" ] && dunstify canceled "no hotstring given" && exit 1 
+alias=$(rofi -dmenu -lines 0 -p extended)
+[ -z "$alias" ] && dunstify canceled "no extended given" && exit 1 
+
+line="${name}=${alias}" 
+
+echo $line >> ~/.hotstrings

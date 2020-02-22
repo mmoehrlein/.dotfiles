@@ -1,0 +1,15 @@
+#!/bin/bash
+SCRIPT_FOLDER="$HOME/bin"
+SCRIPT_FILE="$SCRIPT_FOLDER/$1"
+
+if [ -e $SCRIPT_FILE ]; then
+    echo file already exists
+    exit 1
+fi
+
+echo '#!/bin/bash' > $SCRIPT_FILE
+chmod +x $SCRIPT_FILE
+
+if [ -x /usr/bin/nvim ]; then
+    nvim $SCRIPT_FILE
+fi

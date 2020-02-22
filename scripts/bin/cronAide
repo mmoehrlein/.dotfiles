@@ -1,0 +1,15 @@
+#!/bin/bash -e
+
+# these should be the same as what's defined in /etc/aide.conf
+database=/var/lib/aide/aide.db.gz
+database_out=/var/lib/aide/aide.db.new.gz
+
+if [ ! -f "$database" ]; then
+        echo "$database not found" >&2
+        exit 1
+fi
+
+aide -u || true
+
+mv $database $database.back
+mv $database_out $database

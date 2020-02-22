@@ -1,0 +1,5 @@
+#!/bin/bash
+
+#cat /home/mmoehrlein/.hotstrings | pjs -m "split('=').join(' - ')" | rofi -dmenu -lines 5 -p hotstring -matching fuzzy | pjs -m "split(' - ')[1]" | clipboard
+
+node ~/repos/rofi-hotstring-list
