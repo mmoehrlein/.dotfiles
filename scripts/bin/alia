@@ -1,12 +1,20 @@
 #!/bin/bash
+if [ -t 0 ]
+then 
+    source bashful-input
+    name=$(input -p "alias")
+    [ -z "$name" ] && echo "no alias given" && exit 1 
+    alias=$(input -p "command")
+    [ -z "$alias" ] && echo "no command given" && exit 1 
+else 
+    name=$(rofi -dmenu -lines 0 -p alias)
+    [ -z "$name" ] && dunstify canceled "no alias given" && exit 1 
+    alias=$(rofi -dmenu -lines 0 -p command)
+    [ -z "$alias" ] && dunstify canceled "no command given" && exit 1 
+fi
 
-name=$(rofi -dmenu -lines 0 -p alias)
-[ -z "$name" ] && dunstify canceled "no alias given" && exit 1 
-alias=$(rofi -dmenu -lines 0 -p command)
-[ -z "$alias" ] && dunstify canceled "no command given" && exit 1 
 
 line="alias ${name}='${alias}'" 
 
 echo $line >> ~/.aliases
 
-zsh -c "source ~/.aliases > /dev/null 2>&1; exit"
