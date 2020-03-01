@@ -20,7 +20,6 @@ window:
 scrolling:
   history: 2500
   multiplier: 3
-  faux_multiplier: 3
   auto_scroll: false
 
 tabspaces: 4
@@ -38,7 +37,7 @@ font:
     family: Hack
     style: Italic
 
-  size: 9.5
+  size: 11
 
   offset:
     x: 0
@@ -88,7 +87,7 @@ visual_bell:
   duration: 0
   color: '0xffffff'
 
-background_opacity: 1.0
+background_opacity: 0.9
 
 mouse_bindings:
   - { mouse: Middle, action: PasteSelection }
