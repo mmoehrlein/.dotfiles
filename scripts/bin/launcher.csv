@@ -1,0 +1,9 @@
+# title     # description  <comma>                                  # executable
+alias       Create an Alias,                                        $HOME/bin/alia
+mount       select drive to mount from available devices,           $HOME/bin/lsmount
+umount      select drive to unmount from available devices,         $HOME/bin/lsumount
+mkscript    generate a script template,                             $HOME/bin/mkscript
+i3info      copy window info to clipboard,                          i3info | $HOME/.nvm/versions/node/v12.11.1/bin/clipboard
+i3-layout   create/delete/apply i3 layouts,                         i3-layout-manager
+updateall   run yay without any confirmations to update everything, $HOME/bin/updateall
+bluetooth   control bluetooth options and connections,              rofi-bluetooth
