@@ -14,7 +14,7 @@ super + shift + d
     killall dunst; exec notify-send 'restart dunst'
 
 super + {_,shift +, ctrl +} i
-    exec {~/bin/rofi/rofi-bangs.sh,htstr,addhtstr}
+    exec {~/bin/rofiLauncher,htstr,addhtstr}
 
 super + n
     keepass $KEEFILE
