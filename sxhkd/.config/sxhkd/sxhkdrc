@@ -29,7 +29,7 @@ super + shift + u
     caffeine kill; exec caffeine
 
 super + u
-    rofimoji -s light --use-clipboard 
+    rofimoji -s light --insert-with-clipboard 
 
 super + ctrl + @x
     xkill
