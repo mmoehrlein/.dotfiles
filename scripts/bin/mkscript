@@ -1,6 +1,18 @@
 #!/bin/bash
 SCRIPT_FOLDER="$HOME/bin"
-SCRIPT_FILE="$SCRIPT_FOLDER/$1"
+if [ -z $1 ]; then
+    if [ -t 0 ]; then
+        source bashful-input
+        name=$(input -p "name")
+        [ -z "$name" ] && echo "no script name given" && exit 1
+    else
+        name=$(rofi -dmenu -lines 0 -p name)
+        [ -z "$name" ] && dunstify canceled "no script name given" && exit 1
+    fi
+    SCRIPT_FILE="$SCRIPT_FOLDER/$name"
+else
+    SCRIPT_FILE="$SCRIPT_FOLDER/$1"
+fi
 
 if [ -e $SCRIPT_FILE ]; then
     echo file already exists
@@ -11,5 +23,5 @@ echo '#!/bin/bash' > $SCRIPT_FILE
 chmod +x $SCRIPT_FILE
 
 if [ -x /usr/bin/nvim ]; then
-    nvim $SCRIPT_FILE
+        nvim $SCRIPT_FILE
 fi
