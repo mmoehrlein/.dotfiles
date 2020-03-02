@@ -21,6 +21,16 @@ for cmd in "${NODE_GLOBALS[@]}"; do
     eval "${cmd}(){ unset -f ${NODE_GLOBALS}; load_nvm; ${cmd} \$@ }"
 done
 
+# TMUX
+if which tmux >/dev/null 2>&1; then
+    # if no session is started, start a new session
+    test -z ${TMUX} && tmux
+
+    # when quitting tmux, try to attach
+    while test -z ${TMUX}; do
+        tmux attach || break
+    done
+fi
 
 # change default browser
 export BROWSER=/usr/bin/brave
@@ -29,3 +39,5 @@ export SSH_AUTH_SOCK=$XDG_RUNTIME_DIR/keeagent.socket
 export TERMINAL=/usr/bin/st
 export KEEFILE=/home/mmoehrlein/Nextcloud/mmoehrlein.kdbx
 export HISTFILE=~/.zsh_history
+
+source "$HOME/.homesick/repos/homeshick/homeshick.sh"
