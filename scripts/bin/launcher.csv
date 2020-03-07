@@ -1,9 +1,12 @@
 # title     # description  <comma>                                  # executable
 alias       Create an Alias,                                        $HOME/bin/alia
+bluetooth   control bluetooth options and connections,              rofi-bluetooth
+dotdisable  disable dotfile module,                                 $HOME/bin/dotdisable
+dotenable   enabale dotfile module,                                 $HOME/bin/dotenable
+dotstow     extended stow for dotfiles,                             $HOME/bin/dotstow
+i3info      copy window info to clipboard,                          i3info | $HOME/.nvm/versions/node/v12.11.1/bin/clipboard && dunstify i3info copied
+i3-layout   create/delete/apply i3 layouts,                         i3-layout-manager
+mkscript    generate a script template,                             $HOME/bin/mkscript
 mount       select drive to mount from available devices,           $HOME/bin/lsmount
 umount      select drive to unmount from available devices,         $HOME/bin/lsumount
-mkscript    generate a script template,                             $HOME/bin/mkscript
-i3info      copy window info to clipboard,                          i3info | $HOME/.nvm/versions/node/v12.11.1/bin/clipboard
-i3-layout   create/delete/apply i3 layouts,                         i3-layout-manager
 updateall   run yay without any confirmations to update everything, $HOME/bin/updateall
-bluetooth   control bluetooth options and connections,              rofi-bluetooth

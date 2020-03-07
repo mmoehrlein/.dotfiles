@@ -1,0 +1,42 @@
+#!/bin/bash
+set -x
+trap read debug
+
+DOTFILE_DIR=${DOTFILE_DIR:-$HOME/.dotfiles}
+COMMON_DIR=${COMMON_DIR:-$HOME/.config/common.d}
+PACKAGE=${1:-$(rofi -dmenu -lines 0 -p "package")}
+
+pushd "$DOTFILE_DIR" || exit 1
+
+## install
+# check for install file
+# run install file
+if [ -e ./"$PACKAGE"/install.dot ]; then
+    if [ -e ./"$PACKAGE"/.INSTALLED ]; then
+        echo "install script has already been run. if you want to force a rerun, delete the .INSTALLED file"
+    else
+        echo "found install script. will be executed..."
+        bash ./"$PACKAGE"/install.dot
+        touch ./"$PACKAGE"/.INSTALLED
+        echo "installation successfull"
+    fi
+fi
+
+## stow
+# run stow with ignore regex
+stow --ignore "(.*\.dot)|\.INSTALLED" "$PACKAGE"
+
+## src
+# dateien die beim stow auch in common.d gelinked werden, werden hier enabled falls verfügbar
+
+if [ -x ~/bin/dotenable ]; then
+    if [ -e "$COMMON_DIR"/available/"$PACKAGE"Aliases ]; then
+        dotenable "$PACKAGE"Aliases
+    fi
+
+    if [ -e "$COMMON_DIR"/available/"$PACKAGE"Env ]; then
+        dotenable "$PACKAGE"Env
+    fi
+fi
+
+popd || exit 1
