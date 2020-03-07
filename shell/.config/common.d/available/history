@@ -1,0 +1,5 @@
+# History settings
+export HISTFILE=~/.zsh_history
+export HISTSIZE=999999
+setopt SHARE_HISTORY
+setopt HIST_IGNORE_DUPS

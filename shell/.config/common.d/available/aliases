@@ -1,25 +1,3 @@
-function paci (){
-    if [ $# -eq 0 ]; then
-        echo Using package from last search for install: "$PACS"
-        sudo pacman -S $PACS
-    else
-        sudo pacman -S $@
-    fi
-}
-
-function pacs (){
-    export PACS="$@"
-    pacman -Ss $@
-}
-
-function dotify (){
-    mkdir -p "$HOME/.dotfiles/$1/.config/"
-    mv "$HOME/.config/$1" $_
-    stow -d ~/.dotfiles -t ~ -S $1
-}
-# alias pacs='pacman -Ss'
-alias pacu='sudo pacman -Syu && yay --no-confirm'
-
 alias ls='ls -hN --color=auto --group-directories-first'
 alias la='ls -alhN --color=auto --group-directories-first'
 alias ll='ls -alFh'

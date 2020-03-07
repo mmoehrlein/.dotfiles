@@ -1,0 +1,6 @@
+# change default browser
+export BROWSER=/usr/bin/brave
+export WORKON_HOME=~/.virtualenvs
+export SSH_AUTH_SOCK=$XDG_RUNTIME_DIR/keeagent.socket
+export TERMINAL=/usr/bin/alacritty
+export KEEFILE=/home/mmoehrlein/Nextcloud/mmoehrlein.kdbx
