@@ -1,15 +1,14 @@
 #!/bin/bash
 
 WORKINGDIR="$HOME/bin"
-MAP="$WORKINGDIR/launcher.csv"
+MAP="$WORKINGDIR/${1:-launcher}.csv"
 
-cat "$MAP" \
-    | cut -s -d ',' -f 1 \
+column "$MAP" -t -d -N prog,desc,com -s "," -H com \
+	| tail -n +2 \
     | rofi -dmenu -i -p "Util " \
-    | head -n 1 \
+	| awk 'NR==1 {print $1}' \
     | xargs -i --no-run-if-empty grep "{}" "$MAP" \
-    | cut -d ',' -f 2 \
-    | sed -e 's/^\s*//'\
+    | cut -d ',' -f 3 \
     | head -n 1 \
     | xargs -i --no-run-if-empty /bin/bash -c "{}"
 
