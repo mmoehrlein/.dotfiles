@@ -16,5 +16,5 @@ fi
 
 line="alias ${name}='${alias}'" 
 
-echo $line >> ~/.aliases
+echo "$line" >> ~/.config/common.d/available/aliases
 
