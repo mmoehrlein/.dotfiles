@@ -7,4 +7,4 @@ alias=$(rofi -dmenu -lines 0 -p extended)
 
 line="${name}=${alias}" 
 
-echo $line >> ~/.hotstrings
+echo "$line" >> ~/.hotstrings
