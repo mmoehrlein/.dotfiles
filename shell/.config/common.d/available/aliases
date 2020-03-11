@@ -1,11 +1,19 @@
+#!/bin/bash
+
+# list
 alias ls='ls -hN --color=auto --group-directories-first'
 alias la='ls -alhN --color=auto --group-directories-first'
 alias ll='ls -alFh'
 alias l='ls -CFh'
 
+# grep
 alias grep='grep --color=auto'
 alias fgrep='fgrep --color=auto'
 alias egrep='egrep --color=auto'
+alias hgrep="fc -El 0 | grep"
+
+# tail
+alias t='tail -f'
 
 # Add an "alert" alias for long running commands.  Use like so:
 #   sleep 10; alert
@@ -13,49 +21,56 @@ alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo
 
 alias clip=clipboard
 
-alias t='tail -f'
-
-# Command line head / tail shortcuts
+# pipe to 
 alias -g H='| head'
 alias -g T='| tail'
 alias -g G='| grep'
 alias -g L="| less"
 alias -g M="| most"
+alias -g C="| clipboard"
+
+# combine stdin and stdout and pipe
 alias -g LL="2>&1 | less"
 alias -g CA="2>&1 | cat -A"
+
+# redirect to null
 alias -g NE="2> /dev/null"
 alias -g NUL="> /dev/null 2>&1"
 alias -g P="2>&1| pygmentize -l pytb"
 
+# du
 alias dud='du -d 1 -h'
 alias duf='du -sh *'
+
+# find
 alias fd='find . -type d -name'
 alias ff='find . -type f -name'
 
+# system commands
 alias h='history'
-alias hgrep="fc -El 0 | grep"
 alias help='man'
-alias p='ps -f'
-alias sortnr='sort -n -r'
+alias sys='systemctl'
 alias unexport='unset'
 
+# renames
 alias rm='trash'
-
 alias code='phpstorm'
-alias i3config='nvim ~/.config/i3/config'
 alias pipes='pipes.sh'
-alias sys='systemctl'
+alias open='xdg-open'
 alias cat='bat'
 alias calc='speedcrunch'
-alias open='xdg-open'
 alias vim='nvim'
 alias dl='aria2c'
-alias cd..='cd ..'
-alias ...='../..'
-alias ....='../../..'
-alias diff='icdiff'
 alias dragon='dragon-drag-and-drop'
-alias hstd='homeshick track dotfiles'
+alias diff='icdiff'
+
+# shortcuts
+alias sortnr='sort -n -r'
+alias p='ps -f'
+alias i3config='nvim ~/.config/i3/config'
+alias ..='cd ..'
+alias ...='cd ../..'
+alias ....='ca ../../..'
 alias gis='git status'
 alias gic='git commit'
 alias gicm='git commit -m'

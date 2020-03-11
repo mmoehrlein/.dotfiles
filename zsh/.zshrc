@@ -152,13 +152,7 @@ zle -N zle-line-init
 echo -ne '\e[5 q' # Use beam shape cursor on startup.
 preexec() { echo -ne '\e[5 q' ;} # Use beam shape cursor for each new prompt.
 
-if [ -f ~/.aliases ]; then
-    source ~/.aliases
-fi
-
-if [ -f ~/.common ]; then
-    source ~/.common
-fi
+for f in ~/.config/common.d/enabled/*;do source $f; done
 
 source ~/.config/broot/launcher/bash/br
 for f in ~/.config/zsh/plugins/*.zsh; do source "$f"; done
