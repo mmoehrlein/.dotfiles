@@ -1,6 +1,6 @@
 #!/bin/bash
 SCRIPT_FOLDER="$HOME/bin"
-if [ -z $1 ]; then
+if [ -z "$1" ]; then
     if [ -t 0 ]; then
         source bashful-input
         name=$(input -p "name")
@@ -14,14 +14,18 @@ else
     SCRIPT_FILE="$SCRIPT_FOLDER/$1"
 fi
 
-if [ -e $SCRIPT_FILE ]; then
+if [ -e "$SCRIPT_FILE" ]; then
     echo file already exists
     exit 1
 fi
 
-echo '#!/bin/bash' > $SCRIPT_FILE
-chmod +x $SCRIPT_FILE
+echo $'#!/bin/bash\n' > "$SCRIPT_FILE"
+chmod +x "$SCRIPT_FILE"
 
 if [ -x /usr/bin/nvim ]; then
-        nvim $SCRIPT_FILE
+		if [ -t 0 ]; then
+			nvim +2 "$SCRIPT_FILE"
+		else
+			alacritty -e nvim +2 "$SCRIPT_FILE"
+		fi 
 fi
