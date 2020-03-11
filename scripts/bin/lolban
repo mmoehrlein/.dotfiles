@@ -5,5 +5,14 @@
 # lolcat : https://github.com/busyloop/lolcat
 # to get urxvt working with 256 colors use
 # sudo apt-get install rxvt-unicode-256color
+stdin=$(</dev/stdin)
+input=${stdin:-${1:-$(
+	if [ -t 0 ]; then
+		source bashful-input 
+		    input -p "${prompt:-input}"
+		else
+			rofi -dmenu -lines 0 -p "${prompt:-input}"
+	fi
+)}}
 
-figlet $1 | lolcat
+figlet "$input" | lolcat
