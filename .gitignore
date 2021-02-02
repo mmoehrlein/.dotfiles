@@ -2,3 +2,5 @@
 setup/bin/
 node_modules/
 shell/.hotstrings
+
+scripts/bin/onlyfansextract

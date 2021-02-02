@@ -1,3 +1,3 @@
 #!/bin/bash
-PACKAGE=${1:-$(rofi -dmenu -lines 0 -p "package")}
+PACKAGE=${1:-$(ls ~/.config/common.d/available | rofi -dmenu  -p "package")}
 [ -e ~/.config/common.d/available ] && ln -s ../available/"$PACKAGE" ~/.config/common.d/enabled

@@ -273,3 +273,9 @@ URxvt.keysym.Shift-Control-Down:  \033[1;6B
 ! -xos4-terminus-bold-r-normal--24-240-72-72-c-120-iso10646-1
 ! -xos4-terminus-bold-r-normal--28-280-72-72-c-140-iso10646-1
 ! -xos4-terminus-bold-r-normal--32-320-72-72-c-160-iso10646-1
+!
+Xautolock.time: 1
+Xautolock.notify: 1
+Xautolock.notifier: 'dunstify -t 900 "locking screen " " in 1 seconds"'
+Xautolock.locker: 'i3exit lock'
+Xautolock.detectsleep: true

@@ -1,13 +1,24 @@
 # title, # description, # executable
 alias, Create an Alias, $HOME/bin/alia
-bluetooth, control bluetooth options and connections, rofiBluetooth
+bluetooth, control bluetooth options and connections, $HOME/bin/rofiBluetooth
+coinbin, start coinbin nativefier app, $HOME/repos/coinbin/BitcoinWalletbyCoinb.in-linux-x64/BitcoinWalletbyCoinb.in
+cyberchef, start cyberchef nativefier app, $HOME/repos/CyberChef-linux-x64/CyberChef
 dotdisable, disable dotfile module, $HOME/bin/dotdisable
 dotenable, enabale dotfile module, $HOME/bin/dotenable
 dotstow, extended stow for dotfiles, $HOME/bin/dotstow
+hmsadmin, copy standard questions to clipboard, cat $HOME/Documents/adminSupportHMS.txt | $HOME/.nvm/versions/node/v12.11.1/bin/clipboard
+launcher.csv, edit the ~/bin/launcher.csv file for this menu, alacritty -e nvim $HOME/bin/launcher.csv
 i3info, copy window info to clipboard, i3info | $HOME/.nvm/versions/node/v12.11.1/bin/clipboard && dunstify i3info copied
 i3-layout, create/delete/apply i3 layouts, i3-layout-manager
 mkscript, generate a script template, $HOME/bin/mkscript
 monitor-layouts, change xrandr layouts, $HOME/bin/monitorLayout
+monitormode, switch wifi card from managed mode into monitor and back, $HOME/bin/monitormode
 mount, select drive to mount from available devices, $HOME/bin/lsmount
+restart libinput-gestures, restart lininput for touchped gestures, libinput-gestures-setup restart
+sdCardFix, Load other module into kernel to fix issues with sdcard reader, sudo modprobe rtsx_usb_sdmmc
+sync1, local -> mserver, rsync -av $HOME/mData/ mserver:$HOME/data
+sync1d, local -> mserver (delete), rsync -av --delete $HOME/mData/ mserver:$HOME/data
+sync2, mserver -> local, rsync -av mserver:$HOME/data/ $HOME/mData 
+sync2d, mserver -> local (delete), rsync -av --delete mserver:$HOME/data/ $HOME/mData
 umount, select drive to unmount from available devices, $HOME/bin/lsumount
 updateall, run yay without any confirmations to update everything, $HOME/bin/updateall

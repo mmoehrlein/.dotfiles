@@ -1,7 +1,17 @@
 #!/bin/bash
-echo -n ''
-i3-msg move container workspace update 1>/dev/null
-yay -Syu --answerclean None --answerdiff None --answeredit None --answerupgrade All --noremovemake --nocleanmenu --nodiffmenu --noeditmenu --noupgrademenu --noconfirm
-echo ''
-echo 'FINISHED press any key to exit'
-read line
+if [ -t 0 ];then
+	dunstify update "updating all packages - noconfirm"
+	i3-msg move container workspace update 1>/dev/null
+	yay -Syu \
+		--nocleanmenu --answerclean None \
+		--nodiffmenu --answerdiff None \
+		--noeditmenu --answeredit None \
+		--noupgrademenu --answerupgrade All \
+		--noremovemake --noconfirm 
+	echo -e "\n\nFINISHED press ENTER to exit"
+	read -r
+	i3-msg workspace back_and_forth
+	exit 0
+fi
+
+exec alacritty -e "$HOME"/bin/updateall 

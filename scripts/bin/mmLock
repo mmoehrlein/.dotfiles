@@ -1,0 +1,23 @@
+#!/bin/bash
+# oxide colours from .Xresources
+black=212121ff
+red=e57373ff
+green=a6bc69ff
+yellow=fac863ff
+blue=6699ccff
+magenta=c594c5ff
+cyan=5fb3b3ff
+white=c0c5ceff
+bright_black=5c5c5cff
+bright_white=f3f4f5ff
+
+i3lock -i ~/.lock.png \
+	--clock \
+	--timepos='x+110:h-70' --timecolor="$white" \
+	--datepos='x+43:h-45' --datecolor="$white" --date-align 1 \
+	--verifcolor="$yellow" --wrongcolor="$black" \
+	--insidecolor="$black" --insidevercolor="$bright_black" --insidewrongcolor="$red" \
+	--line-uses-inside \
+	--ringcolor="$cyan" --ringvercolor="$yellow" --ringwrongcolor="$black" \
+	--keyhlcolor="$yellow" --bshlcolor="$red" --separatorcolor="$bright_black" \
+	--pass-media-keys

@@ -1,0 +1,4 @@
+#!/bin/bash
+echo "yes or no"
+
+[ "$(read -r line && echo "$line")" == y ] && echo yes

@@ -112,3 +112,4 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
 source /home/mmoehrlein/.config/broot/launcher/bash/br
+export PATH=/bin/lscript:/bin/lscript:/home/mmoehrlein/bin:/home/mmoehrlein/.local/bin:/home/mmoehrlein/.local/bin:/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/lib/jvm/default/bin:/usr/bin/site_perl:/usr/bin/vendor_perl:/usr/bin/core_perl:/var/lib/snapd/snap/bin
