@@ -77,11 +77,6 @@ fi
 # Enable colors and change prompt:
 autoload -U colors && colors
 
-# History in cache directory:
-HISTSIZE=1000
-SAVEHIST=1000
-HISTFILE=~/.cache/zsh/history
-
 # Basic auto/tab complete:
 autoload -U compinit
 zstyle ':completion:*' menu select
@@ -94,6 +89,9 @@ _comp_options+=(globdots)		# Include hidden files.
 
 # binding strg+space to accept autosuggestion
 bindkey '^ ' autosuggest-accept
+
+
+bindkey ' ' magic-space
     
 ###
 #   VI MODE
@@ -160,6 +158,7 @@ source ~/.config/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
 source /usr/share/fzf/key-bindings.zsh
 source /usr/share/fzf/completion.zsh
 source ~/.config/zsh/plugins/zsh-you-should-use/you-should-use.plugin.zsh
+source ~/.config/zsh/plugins/zsh-autopair/autopair.zsh
 # load last !!
 source ~/.config/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh 
 
