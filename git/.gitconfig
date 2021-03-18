@@ -17,10 +17,11 @@
 
 [user]
 	email = code@moehrlein.io
-	name = mmoehrlein
+	name = Michael Möhrlein
 
 [core]
     editor = vim
+	hooksPath = /home/mmoehrlein/.config/git/hooks
 
 [color]
     ui = always
