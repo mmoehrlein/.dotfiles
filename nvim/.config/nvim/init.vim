@@ -232,15 +232,16 @@ map <leader>bd :Bclose<cr>:tabclose<cr>gT
 " Close all the buffers
 map <leader>ba :bufdo bd<cr>
 
-map <leader>l :bnext<cr>
-map <leader>h :bprevious<cr>
+map <leader>bl :bnext<cr>
+map <leader>bh :bprevious<cr>
 
 " Useful mappings for managing tabs
 map <leader>tn :tabnew<cr>
 map <leader>to :tabonly<cr>
 map <leader>tc :tabclose<cr>
-map <leader>tm :tabmove
-map <leader>t<leader> :tabnext
+map <leader>tm :tabmove 
+map <leader>l :tabnext<cr>
+map <leader>h :tabprevious<cr>
 
 " Let 'tl' toggle between this and the last accessed tab
 let g:lasttab = 1
@@ -485,27 +486,28 @@ if empty(glob('~/.local/share/nvim/site/autoload/plug.vim'))
 endif
 
 call plug#begin('~/.local/share/nvim/plugged')
-Plug 'junegunn/vim-plug'
-Plug 'dikiaap/minimalist'
-Plug 'airblade/vim-gitgutter'
+Plug 'dense-analysis/ale'
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'editorconfig/editorconfig-vim'
-Plug 'itchyny/lightline.vim'
+Plug 'mattn/emmet-vim'
 Plug 'junegunn/fzf'
 Plug 'junegunn/fzf.vim'
-Plug 'mattn/emmet-vim'
-Plug 'scrooloose/nerdtree'
-Plug 'terryma/vim-multiple-cursors'
-Plug 'tpope/vim-eunuch'
-Plug 'tpope/vim-surround'
-Plug 'fatih/vim-go'
-Plug 'sheerun/vim-polyglot'
-Plug 'dense-analysis/ale'
-Plug 'xojs/vim-xo'
 Plug 'junegunn/goyo.vim'
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'itchyny/lightline.vim'
+Plug 'dikiaap/minimalist'
+Plug 'scrooloose/nerdtree'
+Plug 'unblevable/quick-scope'
 Plug 'alvan/vim-closetag'
 Plug 'tpope/vim-commentary'
+Plug 'tpope/vim-eunuch'
 Plug 'yuezk/vim-js'
+Plug 'terryma/vim-multiple-cursors'
+Plug 'airblade/vim-gitgutter'
+Plug 'fatih/vim-go'
+Plug 'junegunn/vim-plug'
+Plug 'sheerun/vim-polyglot'
+Plug 'vimwiki/vimwiki'
+Plug 'xojs/vim-xo'
 call plug#end()
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -522,9 +524,19 @@ let g:NERDTreeDirArrowCollapsible = ''
 map <leader>nn :NERDTreeToggle<cr>
 map <leader>nb :NERDTreeFromBookmark<Space>
 map <leader>nf :NERDTreeFind<cr>
-""
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" vim quickscope
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Trigger a highlight in the appropriate direction when pressing these keys:
+let g:qs_highlight_on_keys = ['f', 'F', 't', 'T']
+highlight QuickScopePrimary guifg='#afff5f' gui=underline ctermfg=155 cterm=underline
+highlight QuickScopeSecondary guifg='#5fffff' gui=underline ctermfg=81 cterm=underline
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => coc.nvim
-"
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
 " TextEdit might fail if hidden is not set.
 set hidden
 
@@ -718,12 +730,12 @@ vnoremap $q <esc>`>a'<esc>`<i'<esc>
 vnoremap $e <esc>`>a"<esc>`<i"<esc>
 
 " Map auto complete of (, ", ', [
-inoremap $1 ()<esc>i
-inoremap $2 []<esc>i
-inoremap $3 {}<esc>i
-inoremap $4 {<esc>o}<esc>O
-inoremap $q ''<esc>i
-inoremap $e ""<esc>i
+inoremap <leader>( ()<esc>i
+inoremap <leader>[ []<esc>i
+inoremap <leader>{ {}<esc>i
+inoremap <leader>{{ {<esc>o}<esc>O
+inoremap <leader>' ''<esc>i
+inoremap <leader>" ""<esc>i
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
