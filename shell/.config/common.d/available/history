@@ -1,5 +1,9 @@
 # History settings
 export HISTFILE=~/.zsh_history
-export HISTSIZE=999999
+export HISTSIZE=500000
+export SAVEHIST=$HISTSIZE
 setopt SHARE_HISTORY
+setopt EXTENDED_HISTORY
 setopt HIST_IGNORE_DUPS
+setopt HIST_EXPIRE_DUPS_FIRST
+setopt HIST_REDUCE_BLANKS

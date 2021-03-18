@@ -1,10 +1,21 @@
 #!/bin/bash
+# short abc
+alias c='bat'
+alias f='fc'
+alias g='git'
+alias h='history'
+alias l='ls -CFh'
+alias o='xdg-open'
+alias p='ps -f'
+alias s='sxiv'
+# tail
+alias t='tail -f'
+alias v='nvim'
 
 # list
 alias ls='ls -hN --color=auto --group-directories-first'
 alias la='ls -alhN --color=auto --group-directories-first'
 alias ll='ls -alFh'
-alias l='ls -CFh'
 
 # grep
 alias grep='grep --color=auto'
@@ -12,8 +23,6 @@ alias fgrep='fgrep --color=auto'
 alias egrep='egrep --color=auto'
 alias hgrep="fc -El 0 | grep"
 
-# tail
-alias t='tail -f'
 
 # Add an "alert" alias for long running commands.  Use like so:
 #   sleep 10; alert
@@ -47,7 +56,6 @@ alias fd='find . -type d -name'
 alias ff='find . -type f -name'
 
 # system commands
-alias h='history'
 alias help='man'
 alias sys='systemctl'
 alias unexport='unset'
@@ -66,11 +74,12 @@ alias diff='icdiff'
 
 # shortcuts
 alias sortnr='sort -n -r'
-alias p='ps -f'
 alias i3config='nvim ~/.config/i3/config'
 alias ..='cd ..'
 alias ...='cd ../..'
 alias ....='ca ../../..'
-alias gis='git status'
-alias gic='git commit'
-alias gicm='git commit -m'
+alias updateall='updateall && exit 0'
+alias dockercom='sudo docker-compose'
+alias docker-compose='sudo docker-compose'
+alias docker='sudo docker'
+alias drop='bg && disown'
