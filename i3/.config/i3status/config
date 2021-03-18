@@ -9,12 +9,13 @@
 general {
         colors = true
         interval = 5
-        color_good = "#2AA198"
-        color_bad = "#586E75"
-        color_degraded = "#DC322F"
+        color_good = "#c0c5ce"
+        color_bad = "#e57373"
+        color_degraded = "#5c5c5c"
 }
 
 order += "cpu_usage"
+order += "cpu_temperature 0"
 order += "load"
 order += "memory"
 # order += "disk /"
@@ -22,12 +23,17 @@ order += "disk /home"
 # order += "ipv6"
 order += "wireless _first_"
 order += "ethernet _first_"
-order += "run_watch VPN"
+# order += "run_watch VPN"
 # order += "battery all"
 order += "tztime local"
 
 cpu_usage {
         format = " cpu: %usage "
+}
+
+cpu_temperature 0 {
+		format = " temp: %degrees °C "
+		max_threshold = 80
 }
 
 load {
@@ -87,5 +93,5 @@ memory {
 
 tztime local {
         # format = "%Y-%m-%d %H:%M:%S"
-        format = " %d.%m. %H:%M "
+        format = " %d.%m. - %H:%M "
 }
