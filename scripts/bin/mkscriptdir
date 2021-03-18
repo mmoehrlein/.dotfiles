@@ -1,0 +1,67 @@
+#!/bin/bash
+
+# help output
+if [ "$1" == "-h" ] || [ "$1" == "--help" ]; then
+echo -e " \
+This tool is a lot like mkscript bit it creates a directory and links the executable up instead of a simple single file script.
+
+usage: mkscript <script-name> [script-folder]
+"
+	exit 0
+fi
+
+
+# folder where all the scipts shall be stored
+SCRIPT_FOLDER=${2:-"$HOME/bin"}
+
+# check if first param is provided
+if [ -z "$1" ]; then
+	# if $1 is not present, it is asked for interactively either via terminal or with rofi
+    if [ -t 0 ]; then
+        source bashful-input
+        name=$(input -p "name")
+        [ -z "$name" ] && echo "no script name given" && exit 1
+    else
+        name=$(rofi -dmenu -lines 0 -p name)
+        [ -z "$name" ] && dunstify canceled "no script name given" && exit 1
+    fi
+    SCRIPT_FILE="$name"
+else
+    SCRIPT_FILE="$1"
+fi
+
+# check if script already exists as single file
+if [ -e "$SCRIPT_FOLDER/$SCRIPT_FILE" ]; then
+	if [ -d "$SCRIPT_FOLDER/$SCRIPT_FILE.d" ]; then
+		echo "Script directory already exists."
+		exit
+	fi
+    echo "file already exists as single script"
+	echo "Do you want to make it into a script dir? [yN]"
+	if [ "$(read -r line && echo "$line")" == y ]; then
+		# convert from single file script to script dir
+		mkdir "$SCRIPT_FOLDER/$SCRIPT_FILE.d"
+		mv "$SCRIPT_FOLDER/$SCRIPT_FILE" "$SCRIPT_FOLDER/$SCRIPT_FILE.d/$SCRIPT_FILE"
+		ln -s "$SCRIPT_FILE.d/$SCRIPT_FILE" "$SCRIPT_FOLDER/$SCRIPT_FILE"
+	fi
+	exit 0
+fi
+
+# check if script exists as a directory
+if [ -d "$SCRIPT_FOLDER/$SCRIPT_FILE.d" ];then 
+	echo "script already exists"
+	exit
+fi
+
+# create script as directory
+mkdir "$SCRIPT_FOLDER/$SCRIPT_FILE.d"
+echo $'#!/bin/bash\n' > "$SCRIPT_FOLDER/$SCRIPT_FILE.d/$SCRIPT_FILE"
+chmod +x "$SCRIPT_FOLDER/$SCRIPT_FILE.d/$SCRIPT_FILE"
+
+if [ -x /usr/bin/nvim ]; then
+		if [ -t 0 ]; then
+			nvim +2 "$SCRIPT_FOLDER/$SCRIPT_FILE.d/$SCRIPT_FILE"
+		else
+			alacritty -e nvim +2 "$SCRIPT_FOLDER/$SCRIPT_FILE.d/$SCRIPT_FILE"
+		fi 
+fi
