@@ -1,0 +1,25 @@
+#!/bin/bash
+set -e
+pushd /root >/dev/null 
+
+echo "Take down link..."
+ip link set wlp7s0 down
+
+if [ "$(iwconfig 2>/dev/null \
+	| grep wlp7s0 -A1 \
+	| grep Mode:Managed)" != "" ]; then
+
+	echo "Card is in managed mode. Changing to monitor mode..."
+	iwconfig wlp7s0 mode managed
+
+elif [ "$(iwconfig 2>/dev/null \
+	| grep wlp7s0 -A1 \
+	| grep Mode:Monitor)" != "" ]; then
+	
+	echo "Card is in monitor mode. Changing to managed mode..."
+	iwconfig wlp7s0 mode monitor
+
+fi
+
+echo "Put the link back up..."
+ip link set wlp7s0 up
