@@ -14,15 +14,21 @@
   </a>
 </p>
 
-> These are my personal dotfiles. Fell free to copy, clone or fork whatever you like and use it fore your own, since dotfiles are ment to be copied and forked.
+> These are my personal dotfiles. Fell free to copy, clone or fork whatever you like and use it for your own, since dotfiles are ment to be copied and forked.
 
 ### 🏠 [Homepage](https://moehrlein.io)
 
 ## Install
 
 ```sh
-./bootstrap.sh
+dotstow programm
 ```
+
+## Info
+- bevorzugt .config
+- using stow
+    - dotstow
+- enable disale for common files
 
 ## Author
 
