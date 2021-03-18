@@ -1,0 +1,55 @@
+#!/bin/bash
+
+# If no data file is given 
+if [ -z "$1" ] || [ ! -e "$1" ]; then
+	echo "This programm prints a PDF with labels. (e.g. on sticky labels)"
+	echo "USAGE: printlabel <file> [offset]"
+	echo ""
+	echo ""
+	echo "INFO:"
+	echo "The programms works as follows: The latex template is split at the right place. It is reassembled with potential empty labels and the data file inserted in the template. After that the pdf is compiled from the tex file and printed"
+	echo ""
+	echo "All files will be generated in a directory under cwd named like the data file without extension (datafile.txt -> datafile, datafile.dat -> datafile) and the data file is moved there too"
+	echo "The required data file is written in plain text and constists of the labels seperated by an empty line. For guidelines check the labels package from latex"
+	echo "The template can be found at /home/mmoehrlein/Documents/labels/labels.tex.template"
+	exit
+fi
+
+datafile=${1:-$(find ./*.dat | head -n1)}
+offset=${2:-0}
+# Path for the .tex template file; check if it exists
+textemplpath=/home/mmoehrlein/Documents/labels/labels.tex.template
+[ ! -f "$textemplpath" ] && echo "The Template could not be found. Please check for $textemplpath" && exit 1
+
+# filename of the template file
+textempl=$(echo -n "$textemplpath" | awk -F "/" '{ print $NF }') 
+
+# name of package (data filename without extension)
+pack=$(echo -n "$datafile" | sed -e 's/\.[a-zA-Z]*$//')
+mkdir "$pack"
+mv "$datafile" "$pack/"
+echo "$datafile was moved to $pack"
+cd "$pack" || exit
+
+# get the line number from the tex template where the label section starts and split it
+cutnum=$(grep -n '\\begin{labels}' "$textemplpath" | awk -F: '{print $1}')
+split "$textemplpath" "${pack}-${textempl}" -l "$cutnum" -a 1 --additional-suffix ".part" -d
+
+# piece everything back together
+cat \
+	"${pack}-${textempl}0.part" \
+	<(for i in $(seq 1 "$offset"); do echo "~ " && echo ""; done;) \
+	"$datafile" \
+	<(echo "") \
+	"${pack}-${textempl}1.part" \
+	>> "$pack.tex" || exit 
+
+# compile latex to pdf
+pdflatex "$pack.tex" 2>&1 1>/dev/null
+
+#wait before printing
+echo "pdf was created; press Enter to print it"
+read -r;
+
+# print pdf
+lp "$pack.pdf" -d DeskJet_3630
