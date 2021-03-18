@@ -152,17 +152,17 @@ preexec() { echo -ne '\e[5 q' ;} # Use beam shape cursor for each new prompt.
 
 for f in ~/.config/common.d/enabled/*;do source $f; done
 
-source ~/.config/broot/launcher/bash/br
+#source ~/.config/broot/launcher/bash/br
 for f in ~/.config/zsh/plugins/*.zsh; do source "$f"; done
 source ~/.config/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
 source /usr/share/fzf/key-bindings.zsh
 source /usr/share/fzf/completion.zsh
 source ~/.config/zsh/plugins/zsh-you-should-use/you-should-use.plugin.zsh
-source ~/.config/zsh/plugins/zsh-autopair/autopair.zsh
+#source ~/.config/zsh/plugins/zsh-autopair/autopair.zsh
 # load last !!
 source ~/.config/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh 
 
 # jumping to ~
 cd
 
-source /home/mmoehrlein/.config/broot/launcher/bash/br
+#source /home/mmoehrlein/.config/broot/launcher/bash/br
