@@ -95,11 +95,11 @@ mouse:
 
   hide_when_typing: false
 
-  url:
+  hints:
     launcher:
       program: xdg-open
 
-    modifiers: None
+    mods: None
 
 selection:
   semantic_escape_chars: ",│`|:\"' ()[]{}<>"
