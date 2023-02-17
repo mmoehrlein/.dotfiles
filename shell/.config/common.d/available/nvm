@@ -12,3 +12,19 @@ load_nvm () {
 for cmd in "${NODE_GLOBALS[@]}"; do
     eval "${cmd}(){ unset -f ${NODE_GLOBALS}; load_nvm; ${cmd} \$@ }"
 done
+
+cd() {
+    # hack to enable cd without arguments
+    if [[ "$#" == "0" ]]
+    then
+        builtin cd
+        return
+    fi
+
+    builtin cd "$1"
+    if [ -f ".nvmrc" ]
+    then
+        echo ".nvmrc found"
+        nvm use
+    fi
+}
