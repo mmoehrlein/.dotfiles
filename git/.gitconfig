@@ -16,12 +16,13 @@
     undo = reset HEAD~1
 
 [user]
-	email = code@moehrlein.io
-	name = Michael Möhrlein
+	email = dev@moehrlein.xyz
+	name = Michael Möhrlein
 
 [core]
     editor = vim
 	hooksPath = /home/mmoehrlein/.config/git/hooks
+	excludesfile = /Users/mmoehrlein/.gitignore_global
 
 [color]
     ui = always
@@ -53,3 +54,6 @@
 
 [gpg]
     program = gpg
+
+[pull]
+	rebase = true
