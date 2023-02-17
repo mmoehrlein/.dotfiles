@@ -34,7 +34,7 @@ font:
     family: Hack
     style: Italic
 
-  size: 8
+  size: 14
 
   offset:
     x: 0
@@ -84,7 +84,7 @@ bell:
   duration: 0
   color: '0xffffff'
 
-background_opacity: 0.9
+background_opacity: 1
 
 mouse_bindings:
   - { mouse: Middle, action: PasteSelection }
@@ -95,11 +95,13 @@ mouse:
 
   hide_when_typing: false
 
-  hints:
-    launcher:
-      program: xdg-open
-
-    mods: None
+hints:
+  enabled:
+    - regex: "(mailto:|gemini:|gopher:|https:|http:|news:|file:|git:|ssh:|ftp:)[^\u0000-\u001F\u007F-\u009F<>\" {-}\\^⟨⟩`]+"
+      command: xdg-open
+      post_processing: true
+      mouse:
+        mods: none
 
 selection:
   semantic_escape_chars: ",│`|:\"' ()[]{}<>"
