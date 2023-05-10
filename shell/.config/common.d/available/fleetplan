@@ -1,0 +1,2 @@
+# use openjdk@11 for fleetplan
+export PATH="/opt/homebrew/opt/openjdk@11/bin:$PATH"

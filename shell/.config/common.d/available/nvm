@@ -1,30 +1,43 @@
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
 # lazyload npm and all global installs
-declare -a NODE_GLOBALS=(`find ~/.nvm/versions/node -maxdepth 3 -type l -wholename '*/bin/*' | xargs -n1 basename | sort | uniq`)
+declare -a NODE_GLOBALS=($(find ~/.nvm/versions/node -maxdepth 3 -type l -wholename '*/bin/*' | xargs -n1 basename | sort | uniq))
 
 NODE_GLOBALS+=("node")
 NODE_GLOBALS+=("nvm")
 
-load_nvm () {
-    export NVM_DIR=~/.nvm
-    [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+load_nvm() {
+	export NVM_DIR=~/.nvm
+	[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
 }
 
 for cmd in "${NODE_GLOBALS[@]}"; do
-    eval "${cmd}(){ unset -f ${NODE_GLOBALS}; load_nvm; ${cmd} \$@ }"
+	eval "${cmd}(){ unset -f ${NODE_GLOBALS}; load_nvm; ${cmd} \$@ }"
 done
 
-cd() {
-    # hack to enable cd without arguments
-    if [[ "$#" == "0" ]]
-    then
-        builtin cd
-        return
-    fi
+# place this after nvm initialization!
+autoload -U add-zsh-hook
 
-    builtin cd "$1"
-    if [ -f ".nvmrc" ]
-    then
-        echo ".nvmrc found"
-        nvm use
-    fi
+load-nvmrc() {
+	local nvmrc_path
+	nvmrc_path="$(nvm_find_nvmrc)"
+
+	if [ -n "$nvmrc_path" ]; then
+		local nvmrc_node_version
+		nvmrc_node_version=$(nvm version "$(cat "${nvmrc_path}")")
+
+		if [ "$nvmrc_node_version" = "N/A" ]; then
+			read -r confirm && [[ $confirm = "y" ]] && nvm install
+		elif [ "$nvmrc_node_version" != "$(nvm version)" ]; then
+			nvm use
+		fi
+	elif [ -n "$(PWD=$OLDPWD nvm_find_nvmrc)" ] && [ "$(nvm version)" != "$(nvm version default)" ]; then
+		echo "Reverting to nvm default version"
+		nvm use default
+	fi
 }
+
+add-zsh-hook chpwd load-nvmrc
+load-nvmrc
