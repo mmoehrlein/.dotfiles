@@ -39,7 +39,12 @@ COMPLETION_WAITING_DOTS="true"
 # ZSH_CUSTOM=/path/to/new-custom-folder
 
 # Set fzf installation directory path
-export FZF_BASE=/usr/bin/fzf
+if [[ $(uname -s) = "Darwin" ]]; then
+  export FZF_BASE=/usr/local/bin/fzf
+else
+  export FZF_BASE=/usr/bin/fzf
+fi
+
 # Uncomment the following line to disable fuzzy completion
 # export DISABLE_FZF_AUTO_COMPLETION="true"
 
@@ -88,11 +93,11 @@ compinit
 _comp_options+=(globdots)		# Include hidden files.
 
 # binding strg+space to accept autosuggestion
-bindkey '^ ' autosuggest-accept
+# bindkey '^ ' autosuggest-accept
 
 
 bindkey ' ' magic-space
-    
+
 ###
 #   VI MODE
 ###
@@ -136,7 +141,7 @@ done
 autoload -U select-bracketed
 zle -N select-bracketed
 for m in visual viopp; do
-  for c in {a,i}${(s..)^:-'()[]{}<>bB'}; do
+  for c in {a,i}${(s..)^:-'()[]{}<>bB'}; do #'
     bindkey -M $m $c select-bracketed
   done
 done
@@ -155,14 +160,20 @@ for f in ~/.config/common.d/enabled/*;do source $f; done
 #source ~/.config/broot/launcher/bash/br
 for f in ~/.config/zsh/plugins/*.zsh; do source "$f"; done
 source ~/.config/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
-source /usr/share/fzf/key-bindings.zsh
-source /usr/share/fzf/completion.zsh
+if [[ $(uname -s) = "Darwin" ]]; then
+  source /opt/homebrew/opt/fzf/shell/key-bindings.zsh
+  source /opt/homebrew/opt/fzf/shell/completion.zsh
+else
+  source /usr/share/fzf/key-bindings.zsh
+  source /usr/share/fzf/completion.zsh
+fi
+
 source ~/.config/zsh/plugins/zsh-you-should-use/you-should-use.plugin.zsh
 #source ~/.config/zsh/plugins/zsh-autopair/autopair.zsh
 # load last !!
-source ~/.config/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh 
+source ~/.config/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
 # jumping to ~
-cd
+#cd
 
 #source /home/mmoehrlein/.config/broot/launcher/bash/br

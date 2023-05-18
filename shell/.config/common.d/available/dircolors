@@ -1,5 +1,12 @@
+#!/bin/bash
+
 # enable color support of ls and also add handy aliases
 if [ -x /usr/bin/dircolors ]; then
     test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
 fi
 
+# optional for macos
+if [ -x /usr/local/bin/gdircolors ]; then
+    export CLICOLOR=1
+    test -r ~/.dircolors && eval "$(gdircolors -b ~/.dircolors)" || eval "$(gdircolors -b)"
+fi

@@ -1,6 +1,10 @@
 #!/bin/bash
 # short abc
-alias c='bat'
+if command -v bat &> /dev/null; then
+    alias c='bat'
+else
+    alias c='cat'
+fi
 alias f='fc'
 alias g='git'
 alias h='history'
@@ -10,12 +14,18 @@ alias p='ps -f'
 alias s='sxiv'
 # tail
 alias t='tail -f'
-alias v='nvim'
+
+if command -v nvim &> /dev/null; then
+    alias v='nvim'
+    alias vim='nvim'
+else
+    alias v='vim'
+fi
 
 # list
-alias ls='ls -hN --color=auto --group-directories-first'
-alias la='ls -alhN --color=auto --group-directories-first'
-alias ll='ls -alFh'
+alias ls='gls -hN --color=auto --group-directories-first'
+alias la='gls -alhN --color=auto --group-directories-first'
+alias ll='gls -alFh'
 
 # grep
 alias grep='grep --color=auto'
@@ -30,7 +40,7 @@ alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo
 
 alias clip=clipboard
 
-# pipe to 
+# pipe to
 alias -g H='| head'
 alias -g T='| tail'
 alias -g G='| grep'
@@ -61,25 +71,25 @@ alias sys='systemctl'
 alias unexport='unset'
 
 # renames
-alias rm='trash'
-alias code='phpstorm'
 alias pipes='pipes.sh'
+if command -v bat &> /dev/null; then
+    alias cat='bat'
+fi
 alias open='xdg-open'
-alias cat='bat'
-alias calc='speedcrunch'
-alias vim='nvim'
 alias dl='aria2c'
 alias dragon='dragon-drag-and-drop'
-alias diff='icdiff'
-
+if command -v icdiff &> /dev/null; then
+    alias diff='icdiff'
+fi
 # shortcuts
 alias sortnr='sort -n -r'
 alias i3config='nvim ~/.config/i3/config'
 alias ..='cd ..'
 alias ...='cd ../..'
-alias ....='ca ../../..'
+alias ....='cd ../../..'
 alias updateall='updateall && exit 0'
-alias dockercom='sudo docker-compose'
-alias docker-compose='sudo docker-compose'
-alias docker='sudo docker'
+alias sdockercom='sudo docker-compose'
+alias sdocker-compose='sudo docker-compose'
+alias sdocker='sudo docker'
 alias drop='bg && disown'
+alias ffs='sudo !!'

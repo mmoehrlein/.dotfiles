@@ -1,0 +1,5 @@
+#!/bin/bash
+
+dotenv(){
+    export $(grep -v '^#' .env | xargs -0)
+}
