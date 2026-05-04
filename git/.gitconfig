@@ -17,7 +17,8 @@
 
 [user]
 	email = dev@moehrlein.xyz
-	name = Michael Möhrlein
+	name = Michael Möhrlein
+    signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIUsavFa4TvYSP2WWfCDc5LKoYCr2Bvvs5NdrdrRsE8Y
 
 [core]
     editor = vim
@@ -53,7 +54,19 @@
     untracked = red
 
 [gpg]
-    program = gpg
+    format = ssh
+
+[gpg "ssh"]
+    program = "/Applications/1Password.app/Contents/MacOS/op-ssh-sign"
 
 [pull]
 	rebase = true
+
+[filter "lfs"]
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+	required = true
+
+[commit]
+	gpgsign = true
