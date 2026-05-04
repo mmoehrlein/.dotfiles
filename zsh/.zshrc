@@ -82,6 +82,10 @@ fi
 # Enable colors and change prompt:
 autoload -U colors && colors
 
+if type brew &>/dev/null; then
+  FPATH=$(brew --prefix)/share/zsh/site-functions:$FPATH
+fi
+
 # Basic auto/tab complete:
 autoload -U compinit
 zstyle ':completion:*' menu select
@@ -176,4 +180,3 @@ source ~/.config/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 # jumping to ~
 #cd
 
-#source /home/mmoehrlein/.config/broot/launcher/bash/br
