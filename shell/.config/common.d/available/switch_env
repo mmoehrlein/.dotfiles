@@ -1,0 +1,53 @@
+# Function to switch .env files
+switch_env() {
+    local env="$1"
+    local region="${2:-net}"
+
+    # Check if a .env file exists
+    if [[ ! -f .env ]]; then
+        echo "No active .env file found."
+        return 1
+    fi
+
+    # Get the current filename from the first line of the active .env file
+    current_filename=$(sed -n '1s/^# \(.*\)/\1/p' .env)
+
+    if [[ -z "$current_filename" ]]; then
+        echo "Filename not found in the first line of the active .env file."
+        return 1
+    fi
+
+    # print the current env if no command args are given
+    if [[ -z "$env" ]]; then
+        echo "${current_filename#.env.}"
+        return 0
+    fi
+
+    # Construct the desired filename
+    desired_filename=".env.$env.$region"
+
+    if [[ ! -f "$desired_filename" ]]; then
+        echo "No matching inactive .env file found for $desired_filename"
+        return 1
+    fi
+
+    # Check if the current filename matches the desired one
+    if [[ "$current_filename" == "$desired_filename" ]]; then
+        echo "The active .env file already matches the desired environment and region."
+        return 0
+    fi
+
+    # Rename the current active .env file to its inactive name
+    mv .env "$current_filename"
+    echo "Renamed active .env to $current_filename"
+
+    # Rename the matching inactive file to .env to activate it
+    mv "$desired_filename" .env
+    echo "Renamed $desired_filename to .env"
+}
+
+# Example usage:
+# switch_env test us
+# switch_env stage
+
+alias se='switch_env'

@@ -1,0 +1,2 @@
+# bun completions
+[ -s "/Users/mmoehrlein/.bun/_bun" ] && source "/Users/mmoehrlein/.bun/_bun"

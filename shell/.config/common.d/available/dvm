@@ -1,0 +1,2 @@
+export DVM_DIR="/Users/mmoehrlein/.dvm"
+export PATH="$DVM_DIR/bin:$PATH"

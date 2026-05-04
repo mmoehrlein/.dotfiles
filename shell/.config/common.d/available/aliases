@@ -93,3 +93,49 @@ alias sdocker-compose='sudo docker-compose'
 alias sdocker='sudo docker'
 alias drop='bg && disown'
 alias ffs='sudo !!'
+
+
+
+
+# andrew burgess - https://www.youtube.com/watch?v=DJR5RLVOjOw
+
+alias jj='pbpaste | jq'
+alias jjj='pbpaste | jq | pbcopy'
+
+function take() {
+    mkdir -p $1
+    cd $1
+}
+
+alias redot='source ~/.zshrc'
+alias dotedit='code ~/.dotfiles'
+
+alias trim='awk "{\$1=\$1;print}"'
+
+alias py='python3'
+alias serve='python3 -m http.server'
+
+alias rm='trash'
+
+
+# GIT ALIASES
+
+alias gst='git status'
+alias gco='git checkout'
+alias gca='git commit --amend'
+alias gcan='git commit --amend --no-edit'
+alias gsta='git stash'
+alias gstp='git stash pop'
+alias gpl='git pull --rebase'
+alias gph='git push'
+
+function gvp() {
+    version_bump=${1:-minor}
+    git stash\
+    && git pull --rebase\
+    && npm version $version_bump\
+    && git push\
+    && git stash pop
+}
+
+
