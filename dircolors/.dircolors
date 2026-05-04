@@ -78,6 +78,8 @@ TERM xterm-color
 TERM xterm-debian
 TERM xterm-new
 TERM xterm-termite
+TERM xterm-kitty
+TERM xterm-ghostty
 
 # Attribute codes: 0=none 1=bold 2=dim 4=underline 5=blink 7=reverse 8=hidden
 # Foreground color codes: 30=black 31=red 32=green 33=yellow 34=blue 35=magenta 36=cyan 37=white
