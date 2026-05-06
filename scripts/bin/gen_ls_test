@@ -1,0 +1,69 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+cd /Users/mmoehrlein/.dotfiles
+rm -rf ls_test/*
+mkdir -p ls_test/{extensions,patterns,types,notes}
+
+mkdir -p ls_test/types/{dir,sticky,other_writable,sticky_other_writable}
+touch ls_test/types/file_normal
+touch ls_test/types/file_exec && chmod +x ls_test/types/file_exec
+touch ls_test/types/file_setuid && chmod u+s ls_test/types/file_setuid
+touch ls_test/types/file_setgid && chmod g+s ls_test/types/file_setgid
+ln -sf file_normal ls_test/types/link_valid
+ln -sf does_not_exist ls_test/types/link_orphan
+mkfifo ls_test/types/fifo_test
+ln ls_test/types/file_normal ls_test/types/file_hardlink_1
+ln ls_test/types/file_normal ls_test/types/file_hardlink_2
+chmod 1755 ls_test/types/sticky
+chmod 0777 ls_test/types/other_writable
+chmod 1777 ls_test/types/sticky_other_writable
+
+mknod ls_test/types/block_device b 1 7 2>/dev/null || true
+mknod ls_test/types/char_device c 1 3 2>/dev/null || true
+python3 - <<'PY' 2>/dev/null || true
+import os, socket
+path='ls_test/types/unix_socket'
+try:
+    if os.path.exists(path):
+        os.remove(path)
+    s=socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+    s.bind(path)
+    s.close()
+except Exception:
+    pass
+PY
+
+awk 'BEGIN{i=0} !/^#/ && NF>=2 {k=$1; if (k ~ /^\./) {i++; printf "%04d %s\n", i, k}}' dircolors/.dircolors | \
+while read -r idx ext; do
+  d="ls_test/extensions/e_${idx}"
+  mkdir -p "$d"
+  touch "$d/sample${ext}"
+done
+
+awk 'BEGIN{i=0} !/^#/ && NF>=2 {k=$1; if (k ~ /^\*/) {i++; printf "%04d %s\n", i, substr(k,2)}}' dircolors/.dircolors | \
+while read -r idx suffix; do
+  d="ls_test/patterns/p_${idx}"
+  mkdir -p "$d"
+  touch "$d/case_${suffix}"
+done
+
+cat > ls_test/notes/README <<'EOF'
+Generated from dircolors/.dircolors.
+
+Included:
+- all extension rules (.ext)
+- all wildcard rules (*suffix)
+- file type and permission rules where possible
+
+Best-effort only (OS/permission dependent):
+- BLK, CHR, SOCK
+Not represented here:
+- DOOR (not available on macOS/Linux)
+- CAPABILITY (requires Linux file capabilities)
+EOF
+
+ext_count=$(find ls_test/extensions -type f | wc -l | tr -d ' ')
+pat_count=$(find ls_test/patterns -type f | wc -l | tr -d ' ')
+type_count=$(find ls_test/types -mindepth 1 | wc -l | tr -d ' ')
+printf 'extensions=%s patterns=%s type_entries=%s\n' "$ext_count" "$pat_count" "$type_count"

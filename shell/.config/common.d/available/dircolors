@@ -6,7 +6,7 @@ if [ -x /usr/bin/dircolors ]; then
 fi
 
 # optional for macos
-if [ -x /usr/local/bin/gdircolors ]; then
+if [ -x /usr/local/bin/gdircolors -o -x /opt/homebrew/bin/gdircolors ]; then
     export CLICOLOR=1
     test -r ~/.dircolors && eval "$(gdircolors -b ~/.dircolors)" || eval "$(gdircolors -b)"
 fi

@@ -4,3 +4,4 @@ node_modules/
 shell/.hotstrings
 test/
 shell/.config/common.d/enabled
+ls_test/
