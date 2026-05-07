@@ -160,6 +160,7 @@ echo -ne '\e[5 q' # Use beam shape cursor on startup.
 preexec() { echo -ne '\e[5 q' ;} # Use beam shape cursor for each new prompt.
 
 for f in ~/.config/common.d/enabled/*;do source $f; done
+for f in ~/.zshrc.d/*;do source $f; done
 
 #source ~/.config/broot/launcher/bash/br
 for f in ~/.config/zsh/plugins/*.zsh; do source "$f"; done
