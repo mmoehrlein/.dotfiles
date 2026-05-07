@@ -1,0 +1,17 @@
+#! /bin/zsh
+
+kitten @ launch --keep-focus --type tab --tab-title "tcs-logs" --title "tcs-logs_redis" --hold --copy-env --cwd ~/
+kitten @ send-text --match "title:^tcs-logs_redis" "redis-server \n"
+
+kitten @ goto-layout --match "title:^tcs-logs" grid
+
+kitten @ launch --keep-focus --match "title:^tcs-logs" --title "tcs-logs_emqx" --hold --copy-env --cwd ~/Sites/tcs-logs
+kitten @ send-text --match "title:^tcs-logs_emqx" "docker start emqx \n"
+
+# kitten @ launch --keep-focus --match "title:^tcs-logs" --title "tcs-logs_watch" --hold --copy-env --cwd ~/Sites/tcs-logs
+# kitten @ send-text --match "title:^tcs-logs_watch" "fnm exec --using .nvmrc npm run watch \n"
+
+kitten @ launch --keep-focus --match "title:^tcs-logs" --title "tcs-logs_start" --hold --copy-env --cwd ~/Sites/tcs-logs
+kitten @ send-text --match "title:^tcs-logs_start" "dotenv && fnm exec --using .nvmrc npm run dev \n"
+
+kitten @ launch --match "title:^tcs-logs" --title "fleetplanX" --hold --copy-env --cwd ~/Sites/tcs-logs

@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+WORKINGDIR="$HOME/bin"
+MAP="$WORKINGDIR/${1:-launcher}.csv"
+
+column -t -s "," "$MAP" \
+	| tail -n +2 \
+    | fzf \
+	| awk 'NR==1 {print $1}' \
+    | gxargs -i --no-run-if-empty grep "{}" "$MAP" \
+    | cut -d ',' -f 3 \
+    | head -n 1 \
+    | gxargs -i --no-run-if-empty /bin/bash -c "{}"
+
+exit 0

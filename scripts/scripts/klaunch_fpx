@@ -1,0 +1,20 @@
+#! /bin/zsh
+
+kitten @ launch --keep-focus --type tab --tab-title "fleetplan" --title "fleetplan_docker" --hold --copy-env --cwd ~/Sites/fleetplan
+kitten @ send-text --match "title:^fleetplan_docker" "npm run dev \n"
+
+kitten @ goto-layout --match "title:^fleetplan" grid
+
+# kitten @ launch --keep-focus --match "title:^fleetplan" --title "fleetplanX_docker" --hold --copy-env --cwd ~/Sites/fleetplanX
+# kitten @ send-text --match "title:^fleetplanX_docker" "docker compose up \n"
+
+kitten @ launch --keep-focus --match "title:^fleetplan" --title "fleetplanX_watch" --hold --copy-env --cwd ~/Sites/fleetplanX
+kitten @ send-text --match "title:^fleetplanX_watch" "fnm exec --using .nvmrc yarn run watch \n"
+
+kitten @ launch --keep-focus --match "title:^fleetplan" --title "fleetplanX_fp_api" --hold --copy-env --cwd ~/Sites/fleetplanX/fp-api
+kitten @ send-text --match "title:^fleetplanX_fp_api" "fnm exec --using ../.nvmrc yarn run dev \n"
+
+kitten @ launch --match "title:^fleetplan" --title "fleetplanX_fp_gen" --hold --copy-env --cwd ~/Sites/fleetplanX/fp-gen
+kitten @ send-text --match "title:^fleetplanX_fp_gen" "fnm exec --using ../.nvmrc yarn run specs-watch \n"
+
+# kitten @ launch --match "title:^fleetplan" --title "fleetplanX" --hold --copy-env --cwd ~/Sites/fleetplanX

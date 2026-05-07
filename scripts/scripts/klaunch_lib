@@ -1,0 +1,15 @@
+#!/usr/bin/env zsh
+
+tab_exists() {
+    [[ $(kitten @ ls | jq --arg tab_title $1 '.[] | .tabs[] | select( .title == $tab_title ) | .id') > 0 ]]
+}
+
+window_exists() {
+    [[ $(kitten @ ls | jq --arg tab_title $1 --arg window_title $2 '.[] | .tabs[] | select( .title == $tab_title) | .windows[] | select( .title == $window_title) | .foreground_processes[] | select(.cmdline[0] == "/bin/zsh" and (.cmdline | length) == 1) | .pid') > 1 ]]
+}
+
+# is_idle <tab_title> <window_title>
+# exits with 0 if the window is idle, 1 if it is not (or if it is not found)
+window_is_idle() {
+    [[ $(kitten @ ls | jq --arg tab_title $1 --arg window_title $2 '.[] | .tabs[] | select( .title == $tab_title) | .windows[] | select( .title == $window_title) | .foreground_processes[] | select(.cmdline[0] == "/bin/zsh" and (.cmdline | length) == 1) | .pid') > 1 ]]
+}

@@ -18,7 +18,8 @@ restart libinput-gestures, restart lininput for touchped gestures, libinput-gest
 sdCardFix, Load other module into kernel to fix issues with sdcard reader, sudo modprobe rtsx_usb_sdmmc
 sync1, local -> mserver, rsync -av $HOME/mData/ mserver:$HOME/data
 sync1d, local -> mserver (delete), rsync -av --delete $HOME/mData/ mserver:$HOME/data
-sync2, mserver -> local, rsync -av mserver:$HOME/data/ $HOME/mData 
+sync2, mserver -> local, rsync -av mserver:$HOME/data/ $HOME/mData
 sync2d, mserver -> local (delete), rsync -av --delete mserver:$HOME/data/ $HOME/mData
 umount, select drive to unmount from available devices, $HOME/bin/lsumount
 updateall, run yay without any confirmations to update everything, $HOME/bin/updateall
+json prettify, prettify json from clipboard to clipboard, pbpaste | jq | pbcopy
